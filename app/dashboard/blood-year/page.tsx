@@ -27,6 +27,7 @@ export default function BloodDonationYearPage() {
     const [expandedYear, setExpandedYear] = useState<string | null>(null)
     const [showForm, setShowForm] = useState(false)
     const [successMsg, setSuccessMsg] = useState('')
+    const [errorMsg, setErrorMsg] = useState('')
 
     // Add form state
     const [formData, setFormData] = useState(emptyForm)
@@ -53,7 +54,13 @@ export default function BloodDonationYearPage() {
 
     const showSuccess = (msg: string) => {
         setSuccessMsg(msg)
+        setErrorMsg('')
         setTimeout(() => setSuccessMsg(''), 3000)
+    }
+
+    const showError = (msg: string) => {
+        setErrorMsg(msg)
+        setSuccessMsg('')
     }
 
     // --- Add ---
@@ -70,6 +77,7 @@ export default function BloodDonationYearPage() {
             createdBy: volunteer.name,
         })
         if (ok) { showSuccess('Record added successfully!'); setFormData(emptyForm); setShowForm(false); await loadRecords() }
+        else { showError('Failed to add record. Please make sure the Supabase table exists. Check console for details.') }
         setSubmitting(false)
     }
 
@@ -96,6 +104,7 @@ export default function BloodDonationYearPage() {
             donorsCount: parseInt(editData.donorsCount),
         })
         if (ok) { showSuccess('Record updated successfully!'); setEditingId(null); await loadRecords() }
+        else { showError('Failed to update record. Please try again.') }
         setSubmitting(false)
     }
 
@@ -154,6 +163,13 @@ export default function BloodDonationYearPage() {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+                {/* Error Message */}
+                {errorMsg && (
+                    <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+                        <p className="text-red-700 font-semibold">❌ {errorMsg}</p>
+                    </div>
+                )}
 
                 {/* Success Message */}
                 {successMsg && (
