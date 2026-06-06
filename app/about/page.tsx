@@ -1,0 +1,183 @@
+import { Target, Users, Flag, Award } from 'lucide-react'
+import Image from 'next/image'
+
+export default function AboutPage() {
+    const milestones = [
+        'To achieve greater heights of success in educating and uplifting the standard of society to a considerable extent around the area of Erode.',
+        'To raise up for the best NSS team for social service',
+    ]
+
+    return (
+        <div className="min-h-screen bg-white">
+            {/* Page Header */}
+            <section className="bg-gradient-to-r from-nss-blue to-nss-blue-dark text-white py-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">About NSS</h1>
+                    <p className="text-xl text-gray-100 max-w-3xl mx-auto">
+                        Serving the nation through community service since 1969
+                    </p>
+                </div>
+            </section>
+
+            {/* About NSS Section */}
+            <section className="py-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="section-heading">About NSS</h2>
+                    <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
+                        <p>
+                            The National Service Scheme is an Indian government – sponsored public service program conducted by the Ministry of Youth Affairs and Sports of the Government of India. National Service Scheme (NSS) in Kongu Engineering College was started in the academic year <strong>1985-1986</strong>. The scheme was started with an intension to seed the nature of helping tendency within the youth society. Started with the strength of few volunteers, now the tree of NSS has reached to about <strong>900 volunteers</strong> in the current academic year 2018-2019. The roots of service have spread its extent to a larger space and cherished the needy.
+                        </p>
+                        <p>
+                            The NSS has been organizing many activities like campus cleaning, awareness programs, blood camp, health check-up and rally on different issues. Added to it, we have been conducting a national level technical symposium <strong>"Prasidhi"</strong> to reveal the technical issues that could solve social issues. Apart from it, we also conduct special camps in which we adept a village in and around Erode and help them with their basic needs. We educate school student in streams like abacus, computer usage, making craft works, yoga and games. A few awareness programs are also conducted for the villager as well as school children.
+                        </p>
+                        <p className="bg-gray-50 border-l-4 border-nss-blue p-4 rounded">
+                            The role of N.S.S. becomes very important in this context as constitution of India also envisages that it is fundamental duty of every citizen to protect and improve the natural environment. NSS benefits both students as well as the society. It shapes the students for a better youth society. It seeds the nature of humanity in the young minds and enriches the nature of environment around them.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Vision & Mission Section */}
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div className="card">
+                            <h2 className="text-3xl font-bold text-nss-blue mb-4">Vision</h2>
+                            <p className="text-gray-700 text-lg leading-relaxed">
+                                The vision is to build the youth with the mind and spirit to serve the society and work for the social uplift of the down-trodden masses of our nation as a movement.
+                            </p>
+                        </div>
+                        <div className="card">
+                            <h2 className="text-3xl font-bold text-nss-red mb-4">Mission</h2>
+                            <p className="text-gray-700 text-lg leading-relaxed">
+                                The programme aims to inculcate social welfare in students, and to provide service to society without bias. NSS volunteers work to ensure that everyone who is needy gets help to enhance their standard of living and lead a life of dignity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Objective & Milestones Section */}
+            <section className="py-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div>
+                            <h2 className="section-heading">Objective</h2>
+                            <div className="card">
+                                <p className="text-gray-700 text-lg leading-relaxed">
+                                    The objective of the NSS team of Kongu Engineering College is to work united and brings powerful changes in the sustaining world and to show tremendous growth in the society.
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 className="section-heading">Milestones</h2>
+                            <div className="space-y-4">
+                                {milestones.map((milestone, index) => (
+                                    <div key={index} className="card">
+                                        <div className="flex items-start space-x-4">
+                                            <div className="w-8 h-8 bg-nss-red rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                                                {index + 1}
+                                            </div>
+                                            <p className="text-gray-700 text-lg leading-relaxed">
+                                                {milestone}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* The Badge Section */}
+            <section className="py-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="section-heading text-center">The NSS Badge</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div className="flex justify-center">
+                            <div className="w-80 h-80 relative bg-white rounded-full p-8 shadow-2xl">
+                                <Image
+                                    src="/images/nss-logo.png"
+                                    alt="NSS Badge"
+                                    width={320}
+                                    height={320}
+                                    className="object-contain"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-bold text-nss-blue mb-6">The Konark Wheel</h3>
+                            <div className="space-y-4 text-gray-700 text-lg">
+                                <p>
+                                    The NSS badge is based on the <strong>Rath Wheel of the Konark Sun Temple</strong>
+                                    located in Odisha, India. The wheel signifies the progressive cycle of life, creation,
+                                    and movement.
+                                </p>
+                                <div className="bg-nss-blue/10 border-l-4 border-nss-blue p-4 rounded">
+                                    <p className="font-semibold text-nss-blue mb-2">The 8 Bars</p>
+                                    <p>
+                                        The wheel has 8 bars which represent the 24 hours of the day. This signifies that
+                                        an NSS volunteer is ready for service at any time - morning, afternoon, or night.
+                                    </p>
+                                </div>
+                                <div className="bg-nss-red/10 border-l-4 border-nss-red p-4 rounded">
+                                    <p className="font-semibold text-nss-red mb-2">The Colors</p>
+                                    <p>
+                                        <strong>Red:</strong> Symbolizes the lively blood of youth and their high spirit.<br />
+                                        <strong>Blue:</strong> Represents the cosmos, of which the NSS is a tiny part,
+                                        ready to contribute its share for the welfare of mankind.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Organizational Structure */}
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="section-heading text-center">Our Team</h2>
+                    <div className="bg-gradient-to-br from-blue-200 to-indigo-200 rounded-lg shadow-lg p-8">
+                        <div className="space-y-6">
+                            <div className="text-center pb-6 border-b border-blue-200">
+                                <div className="flex justify-center mb-4">
+                                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-nss-blue shadow-lg bg-white">
+                                        <Image
+                                            src="/images/principal.jpg"
+                                            alt="Dr. Parameshwaran R"
+                                            width={128}
+                                            height={128}
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </div>
+                                </div>
+                                <h3 className="text-xl font-bold text-nss-blue">Principal</h3>
+                                <p className="text-gray-700 font-semibold mt-2">Dr. Parameshwaran R</p>
+                                <p className="text-gray-600 text-sm">Chief Patron</p>
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-nss-blue text-center mb-4">Programme Officers</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                        <h4 className="text-lg font-bold text-nss-red">Unit I</h4>
+                                        <p className="text-gray-700 font-semibold mt-2">Dr. A. Manimaran</p>
+                                    </div>
+                                    <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                        <h4 className="text-lg font-bold text-nss-red">Unit II</h4>
+                                        <p className="text-gray-700 font-semibold mt-2">Mr. K.S. Navaneethan</p>
+                                    </div>
+                                    <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                        <h4 className="text-lg font-bold text-nss-red">Unit III (SFU)</h4>
+                                        <p className="text-gray-700 font-semibold mt-2">Ms. K. Suvalakshmi</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    )
+}

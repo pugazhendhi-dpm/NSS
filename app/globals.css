@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --nss-red: #EF3742;
+    --nss-blue: #006198;
+  }
+  
+  body {
+    @apply bg-white text-gray-900;
+  }
+  
+  * {
+    @apply border-gray-200;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-nss-red hover:bg-nss-red-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-nss-blue hover:bg-nss-blue-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg;
+  }
+  
+  .section-heading {
+    @apply text-3xl md:text-4xl font-bold text-nss-blue mb-6;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nss-blue focus:border-transparent;
+  }
+  
+  .status-ready {
+    @apply bg-green-50 border-green-200;
+  }
+  
+  .status-called {
+    @apply bg-yellow-50 border-yellow-200;
+  }
+  
+  .status-donated {
+    @apply bg-red-50 border-red-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .konark-wheel-spin {
+    animation: spin 20s linear infinite;
+  }
+}
+
+/* Custom scrollbar for better aesthetics */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--nss-blue);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004A7C;
+}
