@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { Droplet, Heart, Users } from 'lucide-react'
-import { getBloodDonationYearRecords } from '@/lib/bloodDonationYearService'
+import { getBloodDonationYearRecords, groupByYear, YearSummary } from '@/lib/bloodDonationYearService'
 
 export default function BloodDonationImpact() {
-    const [stats, setStats] = useState<{ livesSaved: number; totalUnits: number; totalDonors: number } | null>(null)
+    const [yearSummaries, setYearSummaries] = useState<YearSummary[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -14,21 +14,22 @@ export default function BloodDonationImpact() {
 
     const loadStats = async () => {
         const records = await getBloodDonationYearRecords()
-        const totalUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
-        const totalDonors = records.reduce((sum, r) => sum + r.donorsCount, 0)
-        setStats({
-            totalUnits,
-            totalDonors,
-            livesSaved: totalUnits * 3,
-        })
+        const grouped = groupByYear(records)
+        // Keep only the past 5 years (already sorted descending)
+        setYearSummaries(grouped.slice(0, 5))
         setLoading(false)
     }
 
-    if (loading || !stats) return null
+    const totalUnits = yearSummaries.reduce((s, y) => s + y.totalUnits, 0)
+    const totalDonors = yearSummaries.reduce((s, y) => s + y.totalDonors, 0)
+    const maxUnits = Math.max(...yearSummaries.map(y => y.totalUnits), 1)
+
+    if (loading || yearSummaries.length === 0) return null
 
     return (
         <section className="py-16 bg-gradient-to-br from-red-50 to-pink-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
                 {/* Header */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center space-x-2 bg-red-100 text-red-700 px-4 py-2 rounded-full mb-4">
@@ -43,45 +44,77 @@ export default function BloodDonationImpact() {
                     </p>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    {/* Lives Saved */}
+                {/* All-time Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
                         <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Heart className="w-8 h-8 text-white animate-pulse" />
                         </div>
-                        <div className="text-5xl font-bold text-red-600 mb-2 animate-count-up">
-                            {stats.livesSaved}
-                        </div>
+                        <div className="text-5xl font-bold text-red-600 mb-2">{totalUnits * 3}</div>
                         <div className="text-gray-600 font-semibold">Lives Saved</div>
                         <div className="text-xs text-gray-500 mt-1">1 unit = 3 lives</div>
                     </div>
-
-                    {/* Total Units */}
                     <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Droplet className="w-8 h-8 text-white" />
                         </div>
-                        <div className="text-5xl font-bold text-blue-600 mb-2">
-                            {stats.totalUnits}
-                        </div>
+                        <div className="text-5xl font-bold text-blue-600 mb-2">{totalUnits}</div>
                         <div className="text-gray-600 font-semibold">Units Collected</div>
                         <div className="text-xs text-gray-500 mt-1">Blood units donated</div>
                     </div>
-
-                    {/* Total Donations */}
                     <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
                         <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Users className="w-8 h-8 text-white" />
                         </div>
-                        <div className="text-5xl font-bold text-green-600 mb-2">
-                            {stats.totalDonors}
-                        </div>
+                        <div className="text-5xl font-bold text-green-600 mb-2">{totalDonors}</div>
                         <div className="text-gray-600 font-semibold">Total Donors</div>
                         <div className="text-xs text-gray-500 mt-1">Generous volunteers</div>
                     </div>
                 </div>
 
+                {/* Year-wise Bar Chart */}
+                <div className="bg-white rounded-2xl shadow-xl p-8">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+                        Year-wise Blood Donation Records
+                    </h3>
+                    <p className="text-gray-500 text-sm text-center mb-8">Last {yearSummaries.length} academic years</p>
+
+                    <div className="space-y-5">
+                        {yearSummaries.map((y, i) => {
+                            const barWidth = Math.round((y.totalUnits / maxUnits) * 100)
+                            const colors = [
+                                { bar: 'bg-red-500', text: 'text-red-600', light: 'bg-red-50' },
+                                { bar: 'bg-blue-500', text: 'text-blue-600', light: 'bg-blue-50' },
+                                { bar: 'bg-purple-500', text: 'text-purple-600', light: 'bg-purple-50' },
+                                { bar: 'bg-amber-500', text: 'text-amber-600', light: 'bg-amber-50' },
+                                { bar: 'bg-green-500', text: 'text-green-600', light: 'bg-green-50' },
+                            ]
+                            const c = colors[i % colors.length]
+                            return (
+                                <div key={y.academicYear} className={`rounded-xl p-4 ${c.light}`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-3">
+                                            <span className={`text-sm font-bold ${c.text} w-20`}>{y.academicYear}</span>
+                                            <span className="text-xs text-gray-500">{y.totalEvents} event{y.totalEvents !== 1 ? 's' : ''}</span>
+                                        </div>
+                                        <div className="flex items-center gap-6 text-sm">
+                                            <span className={`font-bold ${c.text}`}>{y.totalUnits} units</span>
+                                            <span className="text-gray-500">{y.totalDonors} donors</span>
+                                            <span className="text-green-600 font-semibold">{y.totalUnits * 3} lives</span>
+                                        </div>
+                                    </div>
+                                    {/* Progress bar */}
+                                    <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                                        <div
+                                            className={`h-4 rounded-full ${c.bar} transition-all duration-700`}
+                                            style={{ width: `${barWidth}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
 
                 {/* Call to Action */}
                 <div className="mt-12 text-center">
@@ -98,6 +131,7 @@ export default function BloodDonationImpact() {
                         </a>
                     </div>
                 </div>
+
             </div>
         </section>
     )
