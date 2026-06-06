@@ -12,7 +12,7 @@ export const PERMISSIONS = {
 
     // Campaigns
     VIEW_CAMPAIGNS: ['admin', 'supersenior'],
-    MANAGE_CAMPAIGNS: ['admin'],
+    MANAGE_CAMPAIGNS: ['admin', 'supersenior'],
 
     // Blood Donors (accessible to all)
     ACCESS_BLOOD_DONORS: ['admin', 'supersenior', 'volunteer'],
