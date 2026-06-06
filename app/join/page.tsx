@@ -20,9 +20,14 @@ export default function JoinPage() {
     const [submitted, setSubmitted] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const [emailError, setEmailError] = useState('')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (!formData.email.endsWith('@kongu.edu')) {
+            setEmailError('Only @kongu.edu college email addresses are accepted.')
+            return
+        }
         setLoading(true)
         setError('')
 
@@ -64,10 +69,15 @@ export default function JoinPage() {
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        })
+        const { name, value } = e.target
+        setFormData({ ...formData, [name]: value })
+        if (name === 'email') {
+            if (value && !value.endsWith('@kongu.edu')) {
+                setEmailError('Only @kongu.edu college email addresses are accepted.')
+            } else {
+                setEmailError('')
+            }
+        }
     }
 
     if (submitted) {
@@ -171,9 +181,14 @@ export default function JoinPage() {
                                     required
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="input-field"
-                                    placeholder="your.email@college.edu"
+                                    className={`input-field ${emailError ? 'border-red-500 focus:ring-red-500' : ''}`}
+                                    placeholder="e.g., name.24cse@kongu.edu"
                                 />
+                                {emailError && (
+                                    <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                                        ⚠️ {emailError}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Roll Number & Department */}
@@ -190,7 +205,7 @@ export default function JoinPage() {
                                         value={formData.rollNumber}
                                         onChange={handleChange}
                                         className="input-field"
-                                        placeholder="e.g., 2024CSE001"
+                                        placeholder="e.g., 24CSR001"
                                     />
                                 </div>
                                 <div>
