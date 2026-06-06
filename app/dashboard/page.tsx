@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Users, Droplet, Phone, LogOut, UserCheck, Shield, Calendar, BarChart, Megaphone, Activity, Image, ClipboardCheck } from 'lucide-react'
+import { Users, Droplet, Phone, LogOut, UserCheck, Shield, Calendar, BarChart, Megaphone, Activity, Image, ClipboardCheck, BookOpen } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { supabase } from '@/lib/supabase/client'
 import FeedbackSection from '@/components/FeedbackSection'
@@ -345,19 +345,19 @@ export default function DashboardPage() {
                         </div>
                     )}
 
-                    {/* Blood Campaigns - Admin & Supersenior */}
+                    {/* Blood Donation Records - Admin & Supersenior */}
                     {hasPermission(volunteer.role, 'VIEW_CAMPAIGNS') && (
-                        <div className="bg-white rounded-lg shadow-lg p-8">
-                            <h2 className="text-2xl font-bold text-nss-blue mb-4">Blood Campaigns</h2>
+                        <div className="bg-white rounded-lg shadow-lg p-8 border-l-4 border-red-500">
+                            <h2 className="text-2xl font-bold text-nss-blue mb-4">Blood Donation Records</h2>
                             <p className="text-gray-600 mb-6">
-                                Manage blood donation drives, track donations, and view impact analytics.
+                                Track and manage blood donation data year-wise. View units donated, donors count and lives saved each academic year.
                             </p>
                             <Link
-                                href="/dashboard/campaigns"
+                                href="/dashboard/blood-year"
                                 className="inline-flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
                             >
-                                <Megaphone className="w-5 h-5" />
-                                <span>Manage Campaigns</span>
+                                <Droplet className="w-5 h-5" />
+                                <span>View by Year</span>
                             </Link>
                         </div>
                     )}

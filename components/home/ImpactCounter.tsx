@@ -66,10 +66,10 @@ export default function ImpactCounter() {
     }, [stats])
 
     const statsData = [
-        { label: 'Volunteers Enrolled', value: displayStats.volunteersEnrolled, icon: Users },
-        { label: 'Hours of Service', value: displayStats.hoursOfService, icon: Clock },
-        { label: 'Blood Units Donated', value: displayStats.bloodUnitsDonated, icon: Droplet },
-        { label: 'Villages Adopted', value: displayStats.villagesAdopted, icon: Home },
+        { label: 'Volunteers Enrolled', value: displayStats.volunteersEnrolled, icon: Users, iconBg: 'bg-blue-600', iconColor: 'text-white', border: 'border-t-4 border-blue-600', valueColor: 'text-blue-600' },
+        { label: 'Hours of Service', value: displayStats.hoursOfService, icon: Clock, iconBg: 'bg-amber-500', iconColor: 'text-white', border: 'border-t-4 border-amber-500', valueColor: 'text-amber-500' },
+        { label: 'Blood Units Donated', value: displayStats.bloodUnitsDonated, icon: Droplet, iconBg: 'bg-red-600', iconColor: 'text-white', border: 'border-t-4 border-red-600', valueColor: 'text-red-600' },
+        { label: 'Villages Adopted', value: displayStats.villagesAdopted, icon: Home, iconBg: 'bg-green-600', iconColor: 'text-white', border: 'border-t-4 border-green-600', valueColor: 'text-green-600' },
     ]
 
     return (
@@ -84,15 +84,15 @@ export default function ImpactCounter() {
                         return (
                             <div
                                 key={index}
-                                className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 animate-slide-up"
+                                className={`bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-slide-up ${stat.border}`}
                                 style={{ animationDelay: `${index * 100}ms` }}
                             >
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-16 h-16 bg-nss-blue rounded-full flex items-center justify-center">
-                                        <Icon className="w-8 h-8 text-white" />
+                                    <div className={`w-16 h-16 ${stat.iconBg} rounded-full flex items-center justify-center shadow-md`}>
+                                        <Icon className={`w-8 h-8 ${stat.iconColor}`} />
                                     </div>
                                 </div>
-                                <span className="text-4xl md:text-5xl font-bold text-nss-red">
+                                <span className={`text-4xl md:text-5xl font-bold ${stat.valueColor}`}>
                                     {stat.value.toLocaleString()}
                                 </span>
                                 <p className="text-gray-600 mt-2 font-medium">{stat.label}</p>
