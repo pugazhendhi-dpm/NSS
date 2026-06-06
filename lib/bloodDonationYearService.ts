@@ -74,6 +74,34 @@ export async function addBloodDonationYearRecord(record: {
     }
 }
 
+// Update an existing record
+export async function updateBloodDonationYearRecord(id: string, record: {
+    academicYear: string
+    eventName: string
+    donationDate: string
+    unitsDonated: number
+    donorsCount: number
+}): Promise<boolean> {
+    try {
+        const { error } = await supabase
+            .from('blood_donation_years')
+            .update({
+                academic_year: record.academicYear,
+                event_name: record.eventName,
+                donation_date: record.donationDate,
+                units_donated: record.unitsDonated,
+                donors_count: record.donorsCount,
+            })
+            .eq('id', id)
+
+        if (error) throw error
+        return true
+    } catch (error) {
+        console.error('Error updating blood donation year record:', error)
+        return false
+    }
+}
+
 // Delete a record
 export async function deleteBloodDonationYearRecord(id: string): Promise<boolean> {
     try {
