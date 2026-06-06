@@ -3,11 +3,30 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Users, Droplet, Phone, LogOut, UserCheck, Shield, Calendar, BarChart, Megaphone, Activity, Image } from 'lucide-react'
+import { Users, Droplet, Phone, LogOut, UserCheck, Shield, Calendar, BarChart, Megaphone, Activity, Image, ClipboardCheck } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { supabase } from '@/lib/supabase/client'
 import FeedbackSection from '@/components/FeedbackSection'
 import { hasPermission, getRoleName, getRoleBadgeColor, PERMISSIONS } from '@/lib/permissions'
+
+function PendingBadge() {
+    const [count, setCount] = useState<number>(0)
+
+    useEffect(() => {
+        supabase
+            .from('volunteers')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'pending')
+            .then(({ count }) => setCount(count || 0))
+    }, [])
+
+    if (count === 0) return null
+    return (
+        <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-500 text-white text-sm font-bold rounded-full animate-pulse">
+            {count}
+        </span>
+    )
+}
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -234,6 +253,26 @@ export default function DashboardPage() {
                             >
                                 <BarChart className="w-5 h-5" />
                                 <span>View Statistics</span>
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* Approve Volunteers - Admin & Supersenior */}
+                    {hasPermission(volunteer.role, 'APPROVE_VOLUNTEERS') && (
+                        <div className="bg-white rounded-lg shadow-lg p-8 border-l-4 border-amber-500">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-2xl font-bold text-nss-blue">Approve Volunteers</h2>
+                                <PendingBadge />
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                                Review and approve new volunteer enrollment requests submitted through the join form.
+                            </p>
+                            <Link
+                                href="/dashboard/approvals"
+                                className="inline-flex items-center space-x-2 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                            >
+                                <ClipboardCheck className="w-5 h-5" />
+                                <span>Review Approvals</span>
                             </Link>
                         </div>
                     )}

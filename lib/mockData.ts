@@ -243,8 +243,8 @@ export const mockCallLogs: CallLog[] = []
 // Mock authentication function
 export async function authenticateVolunteer(email: string, password: string): Promise<Volunteer | null> {
     // In production, this would verify against Supabase
-    // For demo: accept any email from mockVolunteers with password "nss2024"
-    if (password === 'nss2024') {
+    // For demo: accept any email from mockVolunteers with password "nss"
+    if (password === 'nss') {
         const volunteer = mockVolunteers.find((v) => v.email === email)
         return volunteer || null
     }

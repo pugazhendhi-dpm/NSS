@@ -8,7 +8,7 @@ export const PERMISSIONS = {
 
     // Volunteers
     VIEW_ALL_VOLUNTEERS: ['admin', 'supersenior'],
-    APPROVE_VOLUNTEERS: ['admin'],
+    APPROVE_VOLUNTEERS: ['admin', 'supersenior'],
 
     // Campaigns
     VIEW_CAMPAIGNS: ['admin', 'supersenior'],

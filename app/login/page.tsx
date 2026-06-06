@@ -114,7 +114,7 @@ export default function LoginPage() {
 
                     {/* Demo Credentials */}
                     <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                        <p className="text-xs font-semibold text-blue-900 mb-3">🔐 Test Accounts (Password: nss2024)</p>
+                        <p className="text-xs font-semibold text-blue-900 mb-3">🔐 Test Accounts</p>
 
                         <div className="space-y-3">
                             {/* Admin Account */}
@@ -142,6 +142,7 @@ export default function LoginPage() {
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 {/* Back to Home */}
