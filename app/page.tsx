@@ -23,15 +23,14 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=2000')] bg-cover bg-center" />
 
                 {/* Left Logo - Kongu Engineering College */}
-                <div className="absolute left-20 top-1/2 -translate-y-1/2 z-20 hidden lg:block animate-fade-in">
-                    <div className="w-56 h-56 rounded-full bg-white border-4 border-amber-400 flex items-center justify-center p-6 shadow-2xl hover:scale-105 transition-transform duration-300 overflow-hidden">
+                <div className="absolute left-10 top-1/2 -translate-y-1/2 z-20 hidden lg:block animate-fade-in">
+                    <div className="bg-white border-4 border-amber-400 flex items-center justify-center px-6 py-4 shadow-2xl hover:scale-105 transition-transform duration-300 rounded-2xl" style={{ width: '220px', height: '140px' }}>
                         <Image
                             src="/images/kongu-logo.png"
                             alt="Kongu Engineering College"
-                            width={160}
-                            height={160}
-                            className="object-contain rounded-full"
-                            style={{ objectPosition: 'center 60%' }}
+                            width={200}
+                            height={120}
+                            className="object-contain w-full h-full"
                         />
                     </div>
                 </div>
