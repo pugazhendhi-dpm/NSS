@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Droplet, Heart, Users, Award } from 'lucide-react'
-import { getImpactStats } from '@/lib/campaignService'
+import { Droplet, Heart, Users } from 'lucide-react'
+import { getBloodDonationYearRecords } from '@/lib/bloodDonationYearService'
 
 export default function BloodDonationImpact() {
-    const [stats, setStats] = useState<any>(null)
+    const [stats, setStats] = useState<{ livesSaved: number; totalUnits: number; totalDonors: number } | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -13,8 +13,14 @@ export default function BloodDonationImpact() {
     }, [])
 
     const loadStats = async () => {
-        const data = await getImpactStats()
-        setStats(data)
+        const records = await getBloodDonationYearRecords()
+        const totalUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
+        const totalDonors = records.reduce((sum, r) => sum + r.donorsCount, 0)
+        setStats({
+            totalUnits,
+            totalDonors,
+            livesSaved: totalUnits * 3,
+        })
         setLoading(false)
     }
 
@@ -69,29 +75,13 @@ export default function BloodDonationImpact() {
                             <Users className="w-8 h-8 text-white" />
                         </div>
                         <div className="text-5xl font-bold text-green-600 mb-2">
-                            {stats.totalDonations}
+                            {stats.totalDonors}
                         </div>
-                        <div className="text-gray-600 font-semibold">Donations</div>
-                        <div className="text-xs text-gray-500 mt-1">Generous contributions</div>
+                        <div className="text-gray-600 font-semibold">Total Donors</div>
+                        <div className="text-xs text-gray-500 mt-1">Generous volunteers</div>
                     </div>
                 </div>
 
-                {/* Blood Group Breakdown */}
-                {stats.bloodGroupBreakdown && Object.keys(stats.bloodGroupBreakdown).length > 0 && (
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                            Blood Group Contributions
-                        </h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-                            {Object.entries(stats.bloodGroupBreakdown).map(([group, units]: [string, any]) => (
-                                <div key={group} className="text-center p-4 bg-red-50 rounded-lg">
-                                    <div className="text-2xl font-bold text-red-600 mb-1">{group}</div>
-                                    <div className="text-sm text-gray-600">{units} units</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 {/* Call to Action */}
                 <div className="mt-12 text-center">
