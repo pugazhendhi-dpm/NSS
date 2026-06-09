@@ -96,8 +96,47 @@ export default function Footer() {
                         </ul>
                     </div>
 
+                    {/* Social Media Icons - above feedback */}
+                    <div className="col-span-1 md:col-span-4 mt-6 flex justify-center gap-4">
+                        {/* X (Twitter) */}
+                        <a
+                            href="https://x.com/nss_kec1?s=09"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="X (Twitter)"
+                            className="w-10 h-10 rounded-full bg-black flex items-center justify-center hover:opacity-80 transition-opacity"
+                        >
+                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                        </a>
+                        {/* Instagram */}
+                        <a
+                            href="https://www.instagram.com/nsskec/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            className="w-10 h-10 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity"
+                            style={{ background: 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)' }}
+                        >
+                            <Instagram className="w-5 h-5 text-white" />
+                        </a>
+                        {/* YouTube */}
+                        <a
+                            href="http://www.youtube.com/@NSSKEC"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="YouTube"
+                            className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center hover:opacity-80 transition-opacity"
+                        >
+                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg>
+                        </a>
+                    </div>
+
                     {/* Feedback Section */}
-                    <div className="col-span-1 md:col-span-4 mt-6">
+                    <div className="col-span-1 md:col-span-4 mt-4">
                         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
                             <h4 className="text-sm font-semibold mb-2">Have Feedback?</h4>
                             <p className="text-xs text-gray-300 mb-3">Help us improve! Share suggestions or report issues.</p>
@@ -121,46 +160,9 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Social Media & Copyright */}
+                {/* Copyright */}
                 <div className="border-t border-gray-600 mt-8 pt-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                        <div className="flex space-x-4">
-                            {/* X (Twitter) */}
-                            <a
-                                href="https://x.com/nss_kec1?s=09"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="X (Twitter)"
-                                className="w-10 h-10 rounded-full bg-black flex items-center justify-center hover:opacity-80 transition-opacity"
-                            >
-                                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                                </svg>
-                            </a>
-                            {/* Instagram */}
-                            <a
-                                href="https://www.instagram.com/nsskec/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Instagram"
-                                className="w-10 h-10 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity"
-                                style={{ background: 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)' }}
-                            >
-                                <Instagram className="w-5 h-5 text-white" />
-                            </a>
-                            {/* YouTube */}
-                            <a
-                                href="http://www.youtube.com/@NSSKEC"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="YouTube"
-                                className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center hover:opacity-80 transition-opacity"
-                            >
-                                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                                </svg>
-                            </a>
-                        </div>
+                    <div className="flex justify-center">
                         <div className="text-center md:text-right">
                             <p className="text-gray-200 text-sm">
                                 © {currentYear} National Service Scheme - Kongu Engineering College. All Rights Reserved.
