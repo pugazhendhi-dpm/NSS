@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Droplet, Heart, Users } from 'lucide-react'
+import { Droplet, Users } from 'lucide-react'
 import { getBloodDonationYearRecords, groupByYear, YearSummary } from '@/lib/bloodDonationYearService'
 
 export default function BloodDonationImpact() {
@@ -45,21 +45,13 @@ export default function BloodDonationImpact() {
                 </div>
 
                 {/* All-time Summary Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
-                        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Heart className="w-8 h-8 text-white animate-pulse" />
-                        </div>
-                        <div className="text-5xl font-bold text-red-600 mb-2">{totalUnits * 3}</div>
-                        <div className="text-gray-600 font-semibold">Lives Saved</div>
-                        <div className="text-xs text-gray-500 mt-1">1 unit = 3 lives</div>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-2xl mx-auto">
                     <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Droplet className="w-8 h-8 text-white" />
                         </div>
                         <div className="text-5xl font-bold text-blue-600 mb-2">{totalUnits}</div>
-                        <div className="text-gray-600 font-semibold">Units Collected</div>
+                        <div className="text-gray-600 font-semibold">Total Units Collected</div>
                         <div className="text-xs text-gray-500 mt-1">Blood units donated</div>
                     </div>
                     <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
@@ -67,7 +59,7 @@ export default function BloodDonationImpact() {
                             <Users className="w-8 h-8 text-white" />
                         </div>
                         <div className="text-5xl font-bold text-green-600 mb-2">{totalDonors}</div>
-                        <div className="text-gray-600 font-semibold">Total Donors</div>
+                        <div className="text-gray-600 font-semibold">Total Donors Donated</div>
                         <div className="text-xs text-gray-500 mt-1">Generous volunteers</div>
                     </div>
                 </div>
