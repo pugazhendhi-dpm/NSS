@@ -37,59 +37,6 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Vision & Mission Section */}
-            <section className="py-16 bg-gray-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        <div className="card">
-                            <h2 className="text-3xl font-bold text-nss-blue mb-4">Vision</h2>
-                            <p className="text-gray-700 text-lg leading-relaxed">
-                                The vision is to build the youth with the mind and spirit to serve the society and work for the social uplift of the down-trodden masses of our nation as a movement.
-                            </p>
-                        </div>
-                        <div className="card">
-                            <h2 className="text-3xl font-bold text-nss-red mb-4">Mission</h2>
-                            <p className="text-gray-700 text-lg leading-relaxed">
-                                The programme aims to inculcate social welfare in students, and to provide service to society without bias. NSS volunteers work to ensure that everyone who is needy gets help to enhance their standard of living and lead a life of dignity.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Objective & Milestones Section */}
-            <section className="py-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        <div>
-                            <h2 className="section-heading">Objective</h2>
-                            <div className="card">
-                                <p className="text-gray-700 text-lg leading-relaxed">
-                                    The objective of the NSS team of Kongu Engineering College is to work united and brings powerful changes in the sustaining world and to show tremendous growth in the society.
-                                </p>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="section-heading">Milestones</h2>
-                            <div className="space-y-4">
-                                {milestones.map((milestone, index) => (
-                                    <div key={index} className="card">
-                                        <div className="flex items-start space-x-4">
-                                            <div className="w-8 h-8 bg-nss-red rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
-                                                {index + 1}
-                                            </div>
-                                            <p className="text-gray-700 text-lg leading-relaxed">
-                                                {milestone}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             {/* The Badge Section */}
             <section className="py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,6 +120,59 @@ export default function AboutPage() {
                                         <p className="text-gray-700 font-semibold mt-2">Ms. K. Suvalakshmi</p>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Vision & Mission Section */}
+            <section className="py-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div className="card">
+                            <h2 className="text-3xl font-bold text-nss-blue mb-4">Vision</h2>
+                            <p className="text-gray-700 text-lg leading-relaxed">
+                                The vision is to build the youth with the mind and spirit to serve the society and work for the social uplift of the down-trodden masses of our nation as a movement.
+                            </p>
+                        </div>
+                        <div className="card">
+                            <h2 className="text-3xl font-bold text-nss-red mb-4">Mission</h2>
+                            <p className="text-gray-700 text-lg leading-relaxed">
+                                The programme aims to inculcate social welfare in students, and to provide service to society without bias. NSS volunteers work to ensure that everyone who is needy gets help to enhance their standard of living and lead a life of dignity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Objective & Milestones Section */}
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div>
+                            <h2 className="section-heading">Objective</h2>
+                            <div className="card">
+                                <p className="text-gray-700 text-lg leading-relaxed">
+                                    The objective of the NSS team of Kongu Engineering College is to work united and brings powerful changes in the sustaining world and to show tremendous growth in the society.
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 className="section-heading">Milestones</h2>
+                            <div className="space-y-4">
+                                {milestones.map((milestone, index) => (
+                                    <div key={index} className="card">
+                                        <div className="flex items-start space-x-4">
+                                            <div className="w-8 h-8 bg-nss-red rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                                                {index + 1}
+                                            </div>
+                                            <p className="text-gray-700 text-lg leading-relaxed">
+                                                {milestone}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
