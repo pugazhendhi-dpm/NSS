@@ -53,11 +53,16 @@ export default function Footer() {
                         <ul className="space-y-3 text-sm">
                             <li className="flex items-start space-x-2">
                                 <MapPin className="w-5 h-5 mt-1 flex-shrink-0" />
-                                <span className="text-gray-200">
+                                <a
+                                    href="https://maps.app.goo.gl/onMAZG38j62fEX1SA"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-200 hover:text-nss-red transition-colors underline-offset-2 hover:underline"
+                                >
                                     Kongu Engineering College,<br />
                                     Perundurai, Erode - 638052,<br />
                                     Tamil Nadu, India
-                                </span>
+                                </a>
                             </li>
                             <li className="flex items-start space-x-2">
                                 <ExternalLink className="w-5 h-5 mt-0.5 flex-shrink-0" />
