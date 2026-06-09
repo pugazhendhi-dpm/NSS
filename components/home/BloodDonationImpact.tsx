@@ -15,8 +15,8 @@ export default function BloodDonationImpact() {
     const loadStats = async () => {
         const records = await getBloodDonationYearRecords()
         const grouped = groupByYear(records)
-        // Keep only the past 5 years (already sorted descending)
-        setYearSummaries(grouped.slice(0, 5))
+        // Keep only the past 4 years (already sorted descending)
+        setYearSummaries(grouped.slice(0, 4))
         setLoading(false)
     }
 
@@ -83,30 +83,22 @@ export default function BloodDonationImpact() {
                         {yearSummaries.map((y, i) => {
                             const barWidth = Math.round((y.totalUnits / maxUnits) * 100)
                             const colors = [
-                                { bar: 'bg-red-500', text: 'text-red-600', light: 'bg-red-50' },
-                                { bar: 'bg-blue-500', text: 'text-blue-600', light: 'bg-blue-50' },
-                                { bar: 'bg-purple-500', text: 'text-purple-600', light: 'bg-purple-50' },
-                                { bar: 'bg-amber-500', text: 'text-amber-600', light: 'bg-amber-50' },
-                                { bar: 'bg-green-500', text: 'text-green-600', light: 'bg-green-50' },
+                                { bar: 'bg-gradient-to-r from-red-400 to-red-600', text: 'text-red-600', light: 'bg-red-50' },
+                                { bar: 'bg-gradient-to-r from-blue-400 to-blue-600', text: 'text-blue-600', light: 'bg-blue-50' },
+                                { bar: 'bg-gradient-to-r from-purple-400 to-purple-600', text: 'text-purple-600', light: 'bg-purple-50' },
+                                { bar: 'bg-gradient-to-r from-amber-400 to-amber-600', text: 'text-amber-600', light: 'bg-amber-50' },
                             ]
                             const c = colors[i % colors.length]
                             return (
-                                <div key={y.academicYear} className={`rounded-xl p-4 ${c.light}`}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-3">
-                                            <span className={`text-sm font-bold ${c.text} w-20`}>{y.academicYear}</span>
-                                            <span className="text-xs text-gray-500">{y.totalEvents} event{y.totalEvents !== 1 ? 's' : ''}</span>
-                                        </div>
-                                        <div className="flex items-center gap-6 text-sm">
-                                            <span className={`font-bold ${c.text}`}>{y.totalUnits} units</span>
-                                            <span className="text-gray-500">{y.totalDonors} donors</span>
-                                            <span className="text-green-600 font-semibold">{y.totalUnits * 3} lives</span>
-                                        </div>
-                                    </div>
-                                    {/* Progress bar */}
-                                    <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                                <div key={y.academicYear} className="flex items-center gap-4">
+                                    {/* Year label */}
+                                    <span className={`text-sm font-bold ${c.text} w-20 shrink-0 text-right`}>
+                                        {y.academicYear}
+                                    </span>
+                                    {/* Bar */}
+                                    <div className="flex-1 bg-gray-200 rounded-full h-5 overflow-hidden">
                                         <div
-                                            className={`h-4 rounded-full ${c.bar} transition-all duration-700`}
+                                            className={`h-5 rounded-full ${c.bar} transition-all duration-700 shadow-sm`}
                                             style={{ width: `${barWidth}%` }}
                                         />
                                     </div>
