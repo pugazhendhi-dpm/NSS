@@ -72,50 +72,34 @@ export default function BloodDonationImpact() {
                     </div>
                 </div>
 
-                {/* Year-wise Column Chart */}
+                {/* Year-wise Cards */}
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">
                         Year-wise Blood Donation Records
                     </h3>
-                    <p className="text-gray-500 text-sm text-center mb-10">Last {yearSummaries.length} academic years</p>
+                    <p className="text-gray-500 text-sm text-center mb-8">Last {yearSummaries.length} academic years</p>
 
-                    <div className="flex items-end justify-center gap-6 h-56">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                         {yearSummaries
                             .slice()
-                            .reverse() // oldest → newest left to right
+                            .reverse()
                             .map((y, i) => {
-                                const colHeight = Math.round((y.totalUnits / maxUnits) * 100)
-                                const gradients = [
-                                    'from-amber-400 to-amber-600',
-                                    'from-purple-400 to-purple-600',
-                                    'from-blue-400 to-blue-600',
-                                    'from-red-400 to-red-600',
+                                const styles = [
+                                    { bg: 'bg-gradient-to-br from-amber-50 to-amber-100', border: 'border-amber-400', num: 'text-amber-600', year: 'text-amber-700', icon: '🟠' },
+                                    { bg: 'bg-gradient-to-br from-purple-50 to-purple-100', border: 'border-purple-400', num: 'text-purple-600', year: 'text-purple-700', icon: '🟣' },
+                                    { bg: 'bg-gradient-to-br from-blue-50 to-blue-100', border: 'border-blue-400', num: 'text-blue-600', year: 'text-blue-700', icon: '🔵' },
+                                    { bg: 'bg-gradient-to-br from-red-50 to-red-100', border: 'border-red-400', num: 'text-red-600', year: 'text-red-700', icon: '🔴' },
                                 ]
-                                const textColors = [
-                                    'text-amber-600',
-                                    'text-purple-600',
-                                    'text-blue-600',
-                                    'text-red-600',
-                                ]
-                                const grad = gradients[i % gradients.length]
-                                const tc = textColors[i % textColors.length]
+                                const s = styles[i % styles.length]
                                 return (
-                                    <div key={y.academicYear} className="flex flex-col items-center gap-2 flex-1 max-w-[120px]">
-                                        {/* Count above column */}
-                                        <span className={`text-lg font-extrabold ${tc}`}>
-                                            {y.totalUnits}
-                                        </span>
-                                        {/* Column */}
-                                        <div className="w-full bg-gray-100 rounded-t-xl overflow-hidden flex items-end" style={{ height: '180px' }}>
-                                            <div
-                                                className={`w-full bg-gradient-to-t ${grad} rounded-t-xl transition-all duration-700 shadow-md`}
-                                                style={{ height: `${colHeight}%` }}
-                                            />
-                                        </div>
-                                        {/* Year label */}
-                                        <span className={`text-xs font-bold ${tc} text-center`}>
+                                    <div key={y.academicYear} className={`${s.bg} border-2 ${s.border} rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow duration-300`}>
+                                        <p className={`text-sm font-bold ${s.year} mb-3 tracking-wide`}>
                                             {y.academicYear}
-                                        </span>
+                                        </p>
+                                        <p className={`text-5xl font-extrabold ${s.num} mb-1`}>
+                                            {y.totalUnits}
+                                        </p>
+                                        <p className="text-xs text-gray-500 font-medium mt-2">units donated</p>
                                     </div>
                                 )
                             })}
