@@ -72,39 +72,53 @@ export default function BloodDonationImpact() {
                     </div>
                 </div>
 
-                {/* Year-wise Bar Chart */}
+                {/* Year-wise Column Chart */}
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">
                         Year-wise Blood Donation Records
                     </h3>
-                    <p className="text-gray-500 text-sm text-center mb-8">Last {yearSummaries.length} academic years</p>
+                    <p className="text-gray-500 text-sm text-center mb-10">Last {yearSummaries.length} academic years</p>
 
-                    <div className="space-y-5">
-                        {yearSummaries.map((y, i) => {
-                            const barWidth = Math.round((y.totalUnits / maxUnits) * 100)
-                            const colors = [
-                                { bar: 'bg-gradient-to-r from-red-400 to-red-600', text: 'text-red-600', light: 'bg-red-50' },
-                                { bar: 'bg-gradient-to-r from-blue-400 to-blue-600', text: 'text-blue-600', light: 'bg-blue-50' },
-                                { bar: 'bg-gradient-to-r from-purple-400 to-purple-600', text: 'text-purple-600', light: 'bg-purple-50' },
-                                { bar: 'bg-gradient-to-r from-amber-400 to-amber-600', text: 'text-amber-600', light: 'bg-amber-50' },
-                            ]
-                            const c = colors[i % colors.length]
-                            return (
-                                <div key={y.academicYear} className="flex items-center gap-4">
-                                    {/* Year label */}
-                                    <span className={`text-sm font-bold ${c.text} w-20 shrink-0 text-right`}>
-                                        {y.academicYear}
-                                    </span>
-                                    {/* Bar */}
-                                    <div className="flex-1 bg-gray-200 rounded-full h-5 overflow-hidden">
-                                        <div
-                                            className={`h-5 rounded-full ${c.bar} transition-all duration-700 shadow-sm`}
-                                            style={{ width: `${barWidth}%` }}
-                                        />
+                    <div className="flex items-end justify-center gap-6 h-56">
+                        {yearSummaries
+                            .slice()
+                            .reverse() // oldest → newest left to right
+                            .map((y, i) => {
+                                const colHeight = Math.round((y.totalUnits / maxUnits) * 100)
+                                const gradients = [
+                                    'from-amber-400 to-amber-600',
+                                    'from-purple-400 to-purple-600',
+                                    'from-blue-400 to-blue-600',
+                                    'from-red-400 to-red-600',
+                                ]
+                                const textColors = [
+                                    'text-amber-600',
+                                    'text-purple-600',
+                                    'text-blue-600',
+                                    'text-red-600',
+                                ]
+                                const grad = gradients[i % gradients.length]
+                                const tc = textColors[i % textColors.length]
+                                return (
+                                    <div key={y.academicYear} className="flex flex-col items-center gap-2 flex-1 max-w-[120px]">
+                                        {/* Count above column */}
+                                        <span className={`text-lg font-extrabold ${tc}`}>
+                                            {y.totalUnits}
+                                        </span>
+                                        {/* Column */}
+                                        <div className="w-full bg-gray-100 rounded-t-xl overflow-hidden flex items-end" style={{ height: '180px' }}>
+                                            <div
+                                                className={`w-full bg-gradient-to-t ${grad} rounded-t-xl transition-all duration-700 shadow-md`}
+                                                style={{ height: `${colHeight}%` }}
+                                            />
+                                        </div>
+                                        {/* Year label */}
+                                        <span className={`text-xs font-bold ${tc} text-center`}>
+                                            {y.academicYear}
+                                        </span>
                                     </div>
-                                </div>
-                            )
-                        })}
+                                )
+                            })}
                     </div>
                 </div>
 
