@@ -43,12 +43,12 @@ export default function AboutPage() {
                     <h2 className="section-heading text-center">The NSS Badge</h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="flex justify-center">
-                            <div className="w-80 h-80 relative bg-white rounded-full p-8 shadow-2xl">
+                            <div className="w-[480px] h-[480px] relative bg-white rounded-full p-8 shadow-2xl">
                                 <Image
                                     src="/images/nss-logo.png"
                                     alt="NSS Badge"
-                                    width={320}
-                                    height={320}
+                                    width={480}
+                                    height={480}
                                     className="object-contain"
                                 />
                             </div>
