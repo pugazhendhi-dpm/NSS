@@ -103,7 +103,7 @@ export default function Footer() {
                                     <p className="font-semibold text-white">Program Officers:</p>
                                     <p>Unit I: Dr. A. Manimaran<br />
                                         <a href="tel:+919965398712" className="hover:text-nss-red transition-colors">9965398712</a></p>
-                                    <p>Unit II: Mr. K.S. Navaneethan<br />
+                                    <p>Unit II: Dr. K.S. Navaneethan<br />
                                         <a href="tel:+918056554879" className="hover:text-nss-red transition-colors">8056554879</a></p>
                                     <p>Unit III (SFU): Ms. K. Suvalakshmi<br />
                                         <a href="tel:+919384538700" className="hover:text-nss-red transition-colors">9384538700</a></p>

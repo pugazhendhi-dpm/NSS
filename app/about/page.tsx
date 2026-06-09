@@ -113,7 +113,7 @@ export default function AboutPage() {
                                     </div>
                                     <div className="text-center p-4 bg-gray-50 rounded-lg">
                                         <h4 className="text-lg font-bold text-nss-red">Unit II</h4>
-                                        <p className="text-gray-700 font-semibold mt-2">Mr. K.S. Navaneethan</p>
+                                        <p className="text-gray-700 font-semibold mt-2">Dr. K.S. Navaneethan</p>
                                     </div>
                                     <div className="text-center p-4 bg-gray-50 rounded-lg">
                                         <h4 className="text-lg font-bold text-nss-red">Unit III (SFU)</h4>
