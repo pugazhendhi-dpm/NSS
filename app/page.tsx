@@ -105,11 +105,11 @@ export default function HomePage() {
             {/* Impact Counter */}
             <ImpactCounter />
 
-            {/* Blood Donation Impact */}
-            <BloodDonationImpact />
-
             {/* Event Slider */}
             <EventSlider />
+
+            {/* Blood Donation Impact */}
+            <BloodDonationImpact />
 
             {/* About Preview */}
             <section className="py-16 bg-white">
