@@ -38,7 +38,7 @@ export default function AboutPage() {
             </section>
 
             {/* The Badge Section */}
-            <section className="py-16">
+            <section className="pt-4 pb-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <h2 className="section-heading text-center">The NSS Badge</h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
