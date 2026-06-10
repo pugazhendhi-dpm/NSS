@@ -495,6 +495,20 @@ export default function DonorRegistrationPage() {
                             <li>• Earn NSS service hours for blood donation</li>
                         </ul>
                     </div>
+
+                    {/* Eligibility Info Card */}
+                    <div className="mt-6 bg-red-50 border-l-4 border-nss-red p-6 rounded">
+                        <h3 className="font-semibold text-nss-red-dark mb-3">Blood Donation Eligibility & Tips</h3>
+                        <ul className="text-gray-700 space-y-2 text-sm mb-4">
+                            <li><strong className="text-nss-red-dark">Age:</strong> Between 18 and 65 years old.</li>
+                            <li><strong className="text-nss-red-dark">Hemoglobin Count:</strong> At least 12.5 g/dl.</li>
+                            <li><strong className="text-nss-red-dark">Weight:</strong> Minimum 45 kg.</li>
+                            <li><strong className="text-nss-red-dark">Health Status:</strong> You must have a normal body temperature and be feeling healthy on the day of donation.</li>
+                        </ul>
+                        <p className="text-gray-700 text-sm border-t border-red-100 pt-3">
+                            You should always drink lots of water before the donation. Also, keep in mind that you should take a well-balanced meal prior to and after donating blood. This will keep you healthy and fit.
+                        </p>
+                    </div>
                 </div>
             </section>
         </div>
