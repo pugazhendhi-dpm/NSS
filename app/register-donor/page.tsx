@@ -124,18 +124,22 @@ export default function DonorRegistrationPage() {
                 <div className="absolute inset-0 bg-black/60"></div>
                 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-                    <div className="flex justify-center mb-4">
-                        <Droplet className="w-16 h-16 text-white drop-shadow-lg" fill="currentColor" />
-                    </div>
-                    <h1 className="text-4xl md:text-6xl font-serif font-bold mb-2 tracking-wide drop-shadow-lg text-white">
-                        Blood Donor
+                    <h1 className="text-5xl md:text-7xl font-serif font-bold mb-1 tracking-wide drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] text-white">
+                        Blood Donation
                     </h1>
-                    <h2 className="text-3xl md:text-5xl font-serif font-bold text-yellow-500 drop-shadow-md mb-6">
-                        Registration
-                    </h2>
+                    <div className="relative inline-block mb-10">
+                        <h2 className="text-4xl md:text-6xl font-serif font-bold text-[#E5B523] drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)]">
+                            Guide
+                        </h2>
+                        {/* Glow / Underline effect */}
+                        <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-[#E5B523] to-transparent opacity-80 blur-[1px]"></div>
+                    </div>
                     
-                    <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto font-medium tracking-wide">
-                        Register as a blood donor and help save lives in emergencies
+                    <p className="text-sm md:text-base text-white max-w-3xl mx-auto font-semibold tracking-wider mb-3 drop-shadow-md">
+                        Eligibility • Medical Screening • Rules • Regulations • Care
+                    </p>
+                    <p className="text-sm md:text-base text-gray-200 italic font-semibold drop-shadow-md">
+                        "One Donation. Three Lives Saved."
                     </p>
                 </div>
             </section>
