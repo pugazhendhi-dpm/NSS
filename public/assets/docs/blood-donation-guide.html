@@ -68,8 +68,8 @@
 
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
-    background: url('donar_map.png') center/cover no-repeat;
-    padding: 100px 24px 120px;
+    background: url('/images/blood-donate-bg.png') center/cover no-repeat;
+    padding: 112px 24px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -77,60 +77,51 @@
   .hero::before {
     content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.45) 100%);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.6);
   }
-  .hero::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(212, 172, 13, 0.1) 0%, transparent 70%);
-  }
-  .hero .drop {
-    font-size: 80px; line-height: 1; display: block;
-    filter: drop-shadow(0 6px 20px rgba(0,0,0,.6));
-    margin-bottom: 20px;
+  .hero-content {
     position: relative;
-    z-index: 1;
-    animation: pulse-drop 3s ease-in-out infinite;
-  }
-  @keyframes pulse-drop {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+    z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
   }
   .hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(36px, 7vw, 64px);
-    font-weight: 900; color: var(--white);
-    letter-spacing: -2px; line-height: 1.15;
-    text-shadow: 0 4px 16px rgba(0,0,0,.7);
-    position: relative;
-    z-index: 1;
-    margin-bottom: 12px;
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 700; color: var(--white);
+    letter-spacing: 0.025em; line-height: 1;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8));
   }
-  .hero h1 span { color: var(--gold); text-shadow: 0 4px 16px rgba(212, 172, 13, 0.4); }
-  .hero p {
-    color: rgba(255,255,255,.97); font-size: 16px; font-weight: 500;
-    margin-top: 14px; letter-spacing: 0.6px;
-    text-shadow: 0 2px 10px rgba(0,0,0,.5);
+  .hero-guide-wrapper {
     position: relative;
-    z-index: 1;
+    display: inline-block;
+    margin-bottom: 40px;
   }
-  .hero-divider {
-    width: 140px; height: 4px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 20px auto;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 12px rgba(212, 172, 13, 0.5);
+  .hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 700; color: #E5B523;
+    line-height: 1;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.8));
   }
-  .hero-quote {
-    font-style: italic; color: rgba(255,255,255,.98);
-    font-size: 20px; font-weight: 600;
-    margin-top: 16px;
-    text-shadow: 0 3px 12px rgba(0,0,0,.6);
-    position: relative;
-    z-index: 1;
-    letter-spacing: 0.3px;
+  .hero-glow {
+    position: absolute;
+    bottom: -12px; left: 50%;
+    transform: translateX(-50%);
+    width: 128px; height: 4px;
+    background: linear-gradient(90deg, transparent, #E5B523, transparent);
+    opacity: 0.8;
+    filter: blur(1px);
+  }
+  .hero p.topics {
+    color: var(--white); font-size: 16px; font-weight: 600;
+    margin-bottom: 12px; letter-spacing: 0.05em;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  }
+  .hero p.quote {
+    color: #e5e7eb; font-size: 16px; font-weight: 600; font-style: italic;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
   }
   .gold-bar {
     height: 6px;
@@ -463,10 +454,15 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <h1>Blood Donation<br><span> Guide</span></h1>
-  <div class="hero-divider"></div>
-  <p>Eligibility  ·  Medical Screening  ·  Rules  ·  Regulations  ·  Care</p>
-  <p class="hero-quote">"One Donation. Three Lives Saved."</p>
+  <div class="hero-content">
+    <h1>Blood Donation</h1>
+    <div class="hero-guide-wrapper">
+      <h2>Guide</h2>
+      <div class="hero-glow"></div>
+    </div>
+    <p class="topics">Eligibility • Medical Screening • Rules • Regulations • Care</p>
+    <p class="quote">"One Donation. Three Lives Saved."</p>
+  </div>
 </section>
 <div class="gold-bar"></div>
 
