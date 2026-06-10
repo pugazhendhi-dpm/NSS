@@ -22,7 +22,7 @@ export default function AboutPage() {
             {/* About NSS Section */}
             <section className="py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="section-heading">About NSS</h2>
+                    <h2 className="section-heading text-center">About NSS</h2>
                     <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
                         <p>
                             The National Service Scheme is an Indian government – sponsored public service program conducted by the Ministry of Youth Affairs and Sports of the Government of India. National Service Scheme (NSS) in Kongu Engineering College was started in the academic year <strong>1985-1986</strong>. The scheme was started with an intension to seed the nature of helping tendency within the youth society. Started with the strength of few volunteers, now the tree of NSS has reached to about <strong>1800 volunteers</strong> in the current academic year 2026-2027. The roots of service have spread its extent to a larger space and cherished the needy.
