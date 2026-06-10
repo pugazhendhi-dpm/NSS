@@ -13,6 +13,15 @@ const resources = [
         downloadUrl: '/assets/docs/nss-rules-regulations-kec.pdf',
         viewUrl: '/assets/docs/nss-rules-regulations-kec.html',
     },
+    {
+        icon: FileText,
+        title: 'Blood Donation Guide',
+        description: 'Eligibility - Rules & Regulations to donate',
+        fileSize: '25 KB',
+        fileType: 'PDF',
+        downloadUrl: '/assets/docs/blood-donation-guide.pdf',
+        viewUrl: '/assets/docs/blood-donation-guide.html',
+    },
 ]
 
 export default function ResourcesPage() {
