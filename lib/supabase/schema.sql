@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS activities (
   location TEXT,
   participants INTEGER DEFAULT 0,
   image_url TEXT,
+  document_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   created_by TEXT,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

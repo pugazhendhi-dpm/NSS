@@ -219,7 +219,7 @@ export default function ActivitiesPage() {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="mt-4 pt-4 border-t border-gray-200">
+                                                                    <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
                                                                         <button className="text-nss-blue hover:text-nss-blue-dark font-semibold text-sm flex items-center space-x-1">
                                                                             <span>{isExpanded ? 'Show Less' : 'Read More'}</span>
                                                                             <svg
@@ -237,6 +237,18 @@ export default function ActivitiesPage() {
                                                                                 />
                                                                             </svg>
                                                                         </button>
+                                                                        
+                                                                        {activity.documentUrl && (
+                                                                            <a
+                                                                                href={activity.documentUrl}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                onClick={(e) => e.stopPropagation()}
+                                                                                className="inline-flex items-center space-x-1 text-sm font-semibold text-gray-600 hover:text-nss-red transition-colors"
+                                                                            >
+                                                                                <span>📄 View Report</span>
+                                                                            </a>
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -10,6 +10,7 @@ export interface Activity {
     location: string
     participants: number
     imageUrl?: string
+    documentUrl?: string
     createdAt: Date
     createdBy: string
 }
@@ -34,6 +35,7 @@ export async function getActivities(): Promise<Activity[]> {
             location: activity.location || '',
             participants: activity.participants,
             imageUrl: activity.image_url || undefined,
+            documentUrl: activity.document_url || undefined,
             createdAt: new Date(activity.created_at),
             createdBy: activity.created_by || 'Unknown',
         }))
@@ -52,6 +54,7 @@ export async function addActivity(
     location: string,
     participants: number,
     imageUrl: string | undefined,
+    documentUrl: string | undefined,
     createdBy: string
 ): Promise<Activity | null> {
     try {
@@ -65,6 +68,7 @@ export async function addActivity(
                 location,
                 participants,
                 image_url: imageUrl,
+                document_url: documentUrl,
                 created_by: createdBy,
             })
             .select()
@@ -81,6 +85,7 @@ export async function addActivity(
             location: data.location || '',
             participants: data.participants,
             imageUrl: data.image_url || undefined,
+            documentUrl: data.document_url || undefined,
             createdAt: new Date(data.created_at),
             createdBy: data.created_by || 'Unknown',
         }
@@ -99,7 +104,8 @@ export async function updateActivity(
     date: Date,
     location: string,
     participants: number,
-    imageUrl: string | undefined
+    imageUrl: string | undefined,
+    documentUrl: string | undefined
 ): Promise<boolean> {
     try {
         const { error } = await supabase
@@ -112,6 +118,7 @@ export async function updateActivity(
                 location,
                 participants,
                 image_url: imageUrl,
+                document_url: documentUrl,
             })
             .eq('id', id)
 

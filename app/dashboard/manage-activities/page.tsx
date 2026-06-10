@@ -27,6 +27,7 @@ export default function ActivitiesManagementPage() {
         date: '',
         location: '',
         participants: 0,
+        documentUrl: '',
     })
 
     useEffect(() => {
@@ -61,6 +62,7 @@ export default function ActivitiesManagementPage() {
             date: '',
             location: '',
             participants: 0,
+            documentUrl: '',
         })
     }
 
@@ -74,7 +76,8 @@ export default function ActivitiesManagementPage() {
             new Date(formData.date),
             formData.location,
             formData.participants,
-            undefined,
+            undefined, // imageUrl
+            formData.documentUrl || undefined,
             volunteer.name
         )
 
@@ -93,7 +96,8 @@ export default function ActivitiesManagementPage() {
             new Date(formData.date),
             formData.location,
             formData.participants,
-            undefined
+            undefined, // imageUrl
+            formData.documentUrl || undefined
         )
 
         resetForm()
@@ -109,6 +113,7 @@ export default function ActivitiesManagementPage() {
             date: activity.date.toISOString().split('T')[0],
             location: activity.location,
             participants: activity.participants,
+            documentUrl: activity.documentUrl || '',
         })
     }
 
@@ -239,6 +244,17 @@ export default function ActivitiesManagementPage() {
                                     }
                                     className="input-field"
                                     min="0"
+                                />
+                            </div>
+
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Document URL (Google Drive Link)</label>
+                                <input
+                                    type="url"
+                                    value={formData.documentUrl}
+                                    onChange={(e) => setFormData({ ...formData, documentUrl: e.target.value })}
+                                    className="input-field"
+                                    placeholder="https://drive.google.com/file/d/.../view"
                                 />
                             </div>
                         </div>
