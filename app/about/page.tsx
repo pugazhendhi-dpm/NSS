@@ -90,12 +90,12 @@ export default function AboutPage() {
                         <div className="space-y-6">
                             <div className="text-center pb-6 border-b border-blue-200">
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-nss-blue shadow-lg bg-white">
+                                    <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-nss-blue shadow-lg bg-white">
                                         <Image
                                             src="/images/principal.jpg"
                                             alt="Dr. Parameshwaran R"
-                                            width={128}
-                                            height={128}
+                                            width={192}
+                                            height={192}
                                             className="object-cover w-full h-full"
                                         />
                                     </div>
