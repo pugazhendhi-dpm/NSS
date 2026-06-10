@@ -121,7 +121,7 @@ export default function LoginPage() {
                             <div className="bg-white p-2 rounded border border-purple-200">
                                 <p className="text-xs font-semibold text-purple-800 mb-1">👑 Administrator (Full Access)</p>
                                 <p className="text-xs text-gray-700">
-                                    <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700">admin@college.edu</code>
+                                    <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700">nsskec@kongu.ac.in</code>
                                 </p>
                             </div>
 
