@@ -116,14 +116,26 @@ export default function DonorRegistrationPage() {
     return (
         <div className="min-h-screen bg-white">
             {/* Page Header */}
-            <section className="bg-gradient-to-r from-nss-red to-nss-red-dark text-white py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="flex justify-center mb-4">
-                        <Droplet className="w-16 h-16" fill="currentColor" />
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">Blood Donor Registration</h1>
-                    <p className="text-xl text-gray-100 max-w-3xl mx-auto">
-                        Register as a blood donor and help save lives in emergencies
+            <section 
+                className="relative text-white py-28 bg-nss-red-dark bg-cover bg-center"
+                style={{ backgroundImage: "url('/images/blood-donate-bg.png')" }}
+            >
+                {/* Dark overlay for readability */}
+                <div className="absolute inset-0 bg-black/60"></div>
+                
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+                    <h1 className="text-5xl md:text-7xl font-serif font-bold mb-2 tracking-wide drop-shadow-lg text-white">
+                        Blood Donation
+                    </h1>
+                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-yellow-500 drop-shadow-md mb-8">
+                        Guide
+                    </h2>
+                    
+                    <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto font-medium tracking-wider mb-4">
+                        Eligibility • Medical Screening • Rules • Regulations • Care
+                    </p>
+                    <p className="text-lg text-gray-300 italic font-medium">
+                        "One Donation. Three Lives Saved."
                     </p>
                 </div>
             </section>
