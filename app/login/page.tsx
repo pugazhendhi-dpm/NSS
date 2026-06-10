@@ -81,7 +81,7 @@ export default function LoginPage() {
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="input-field"
-                                placeholder="your.email@college.edu"
+                                placeholder="name.24cse@kongu.edu"
                             />
                         </div>
 

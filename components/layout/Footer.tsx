@@ -133,7 +133,9 @@ export default function Footer() {
                             <p className="text-xs text-gray-300 mb-3">Help us improve! Share suggestions or report issues.</p>
                             <div className="flex flex-col sm:flex-row gap-2 justify-center">
                                 <a
-                                    href="mailto:nsskec@kongu.ac.in"
+                                    href="mailto:nsskec@kongu.ac.in?subject=NSS%20Website%20Feedback"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="inline-flex items-center justify-center space-x-1 bg-white text-nss-blue px-3 py-1.5 rounded text-xs font-semibold hover:bg-gray-100 transition-colors"
                                 >
                                     <Mail className="w-3 h-3" />

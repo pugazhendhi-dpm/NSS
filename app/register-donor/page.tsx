@@ -116,13 +116,13 @@ export default function DonorRegistrationPage() {
     return (
         <div className="min-h-screen bg-white">
             {/* Page Header */}
-            <section 
+            <section
                 className="relative text-white py-28 bg-gray-200 bg-cover bg-center"
                 style={{ backgroundImage: "url('/images/blood-donate-bg.png')" }}
             >
                 {/* Dark overlay for readability */}
                 <div className="absolute inset-0 bg-black/60"></div>
-                
+
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
                     <h1 className="text-5xl md:text-7xl font-serif font-bold mb-1 tracking-wide drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] text-white">
                         Blood Donor
@@ -134,7 +134,7 @@ export default function DonorRegistrationPage() {
                         {/* Glow / Underline effect */}
                         <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#E5B523] to-transparent opacity-80 blur-[1px]"></div>
                     </div>
-                    
+
                     <p className="text-lg md:text-xl text-white max-w-3xl mx-auto font-semibold tracking-wider mb-3 drop-shadow-md">
                         Register as a blood donor and help save lives in emergencies
                     </p>
@@ -203,7 +203,7 @@ export default function DonorRegistrationPage() {
                                             value={formData.email}
                                             onChange={handleChange}
                                             className="input-field"
-                                            placeholder="your.email@college.edu"
+                                            placeholder="name.24cse@kongu.edu"
                                         />
                                     </div>
 
@@ -219,7 +219,7 @@ export default function DonorRegistrationPage() {
                                             value={formData.rollNumber}
                                             onChange={handleChange}
                                             className="input-field"
-                                            placeholder="e.g., 2024CSE001"
+                                            placeholder="e.g., 24CSR001"
                                         />
                                     </div>
 
