@@ -73,18 +73,26 @@ export default function Footer() {
                     <div>
                         <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
                         <ul className="space-y-3 text-sm">
-                            <li className="flex items-start space-x-2">
-                                <MapPin className="w-5 h-5 mt-1 flex-shrink-0" />
-                                <a
-                                    href="https://maps.app.goo.gl/onMAZG38j62fEX1SA"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-200 hover:text-nss-red transition-colors underline-offset-2 hover:underline"
-                                >
-                                    Kongu Engineering College,<br />
-                                    Perundurai, Erode - 638052,<br />
-                                    Tamil Nadu, India
-                                </a>
+                            <li className="flex flex-col space-y-2">
+                                <div className="flex items-start space-x-2">
+                                    <MapPin className="w-5 h-5 mt-1 flex-shrink-0" />
+                                    <span className="text-gray-200">
+                                        Kongu Engineering College,<br />
+                                        Perundurai, Erode - 638052,<br />
+                                        Tamil Nadu, India
+                                    </span>
+                                </div>
+                                <div className="w-full h-32 rounded-lg overflow-hidden mt-2 border border-white/10 shadow-inner">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.188737525381!2d77.60447331533261!3d11.27218699198642!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96d7810fe32d5%3A0x85cf49c5b26fb72e!2sKongu%20Engineering%20College!5e0!3m2!1sen!2sin!4v1689311651859!5m2!1sen!2sin"
+                                        width="100%"
+                                        height="100%"
+                                        style={{ border: 0 }}
+                                        allowFullScreen
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                    />
+                                </div>
                             </li>
                             <li className="flex items-start space-x-2">
                                 <ExternalLink className="w-5 h-5 mt-0.5 flex-shrink-0" />
