@@ -3,42 +3,37 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-
-const sliderEvents = [
-    { 
-        id: 1, 
-        image: "/images/slider/1.jpg", 
-        title: "NSS KEC '26 Volunteer Orientation", 
-        subtitle: "Uniting passionate minds for community service and social impact." 
-    },
-    { 
-        id: 2, 
-        image: "/images/slider/2.jpg", 
-        title: "Executive Committee Meeting", 
-        subtitle: "Planning upcoming initiatives and assessing current program impact." 
-    },
-    { 
-        id: 3, 
-        image: "/images/slider/3.jpg", 
-        title: "Republic Day Parade 2024", 
-        subtitle: "Our volunteers demonstrating discipline and patriotism during the college Republic Day celebrations." 
-    },
-    { 
-        id: 4, 
-        image: "/images/slider/4.jpg", 
-        title: "Special Camp at Local Heritage Site", 
-        subtitle: "A 7-day intensive camp focusing on heritage preservation and rural community development." 
-    }
-]
+import { getSliderEvents, subscribeToSliderEvents, SliderEvent } from '@/lib/sliderService'
 
 export default function EventSlider() {
+    const [sliderEvents, setSliderEvents] = useState<SliderEvent[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
+    const [loading, setLoading] = useState(true)
 
-    const nextSlide = useCallback(() => {
-        setCurrentIndex((prevIndex) => (prevIndex === sliderEvents.length - 1 ? 0 : prevIndex + 1))
+    useEffect(() => {
+        const loadEvents = async () => {
+            const data = await getSliderEvents()
+            setSliderEvents(data)
+            setLoading(false)
+        }
+        loadEvents()
+
+        const unsubscribe = subscribeToSliderEvents(async () => {
+            const data = await getSliderEvents()
+            setSliderEvents(data)
+            setCurrentIndex(0) // Reset to first slide when data changes
+        })
+
+        return unsubscribe
     }, [])
 
+    const nextSlide = useCallback(() => {
+        if (sliderEvents.length === 0) return
+        setCurrentIndex((prevIndex) => (prevIndex === sliderEvents.length - 1 ? 0 : prevIndex + 1))
+    }, [sliderEvents.length])
+
     const prevSlide = () => {
+        if (sliderEvents.length === 0) return
         setCurrentIndex((prevIndex) => (prevIndex === 0 ? sliderEvents.length - 1 : prevIndex - 1))
     }
 
@@ -48,12 +43,34 @@ export default function EventSlider() {
 
     // Auto-play effect
     useEffect(() => {
+        if (sliderEvents.length <= 1) return
+
         const timer = setInterval(() => {
             nextSlide()
         }, 4000)
 
         return () => clearInterval(timer)
-    }, [nextSlide])
+    }, [nextSlide, sliderEvents.length])
+
+    if (loading) {
+        return (
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl font-bold text-nss-blue mb-10 text-center relative inline-block left-1/2 -translate-x-1/2">
+                        Recent Event Highlights
+                        <div className="h-1 w-2/3 bg-nss-red mx-auto mt-2 rounded-full"></div>
+                    </h2>
+                    <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl bg-gray-200 animate-pulse flex items-center justify-center">
+                        <span className="text-gray-400">Loading slider...</span>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    if (sliderEvents.length === 0) {
+        return null // Hide section if no slides
+    }
 
     return (
         <section className="py-16 bg-gray-50">
@@ -72,7 +89,7 @@ export default function EventSlider() {
                         {sliderEvents.map((event) => (
                             <div key={event.id} className="min-w-full h-full relative">
                                 <Image
-                                    src={event.image}
+                                    src={event.imageUrl}
                                     alt={event.title}
                                     fill
                                     loading="lazy"
@@ -91,36 +108,42 @@ export default function EventSlider() {
                     </div>
 
                     {/* Navigation Arrows */}
-                    <button 
-                        onClick={prevSlide}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-nss-blue backdrop-blur-sm transition-all opacity-0 md:group-hover:opacity-100 focus:opacity-100"
-                        aria-label="Previous slide"
-                    >
-                        <ChevronLeft className="w-8 h-8" />
-                    </button>
-                    <button 
-                        onClick={nextSlide}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-nss-blue backdrop-blur-sm transition-all opacity-0 md:group-hover:opacity-100 focus:opacity-100"
-                        aria-label="Next slide"
-                    >
-                        <ChevronRight className="w-8 h-8" />
-                    </button>
+                    {sliderEvents.length > 1 && (
+                        <>
+                            <button 
+                                onClick={prevSlide}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-nss-blue backdrop-blur-sm transition-all opacity-0 md:group-hover:opacity-100 focus:opacity-100"
+                                aria-label="Previous slide"
+                            >
+                                <ChevronLeft className="w-8 h-8" />
+                            </button>
+                            <button 
+                                onClick={nextSlide}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-nss-blue backdrop-blur-sm transition-all opacity-0 md:group-hover:opacity-100 focus:opacity-100"
+                                aria-label="Next slide"
+                            >
+                                <ChevronRight className="w-8 h-8" />
+                            </button>
+                        </>
+                    )}
 
                     {/* Dots Navigation */}
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-3 z-20">
-                        {sliderEvents.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => goToSlide(index)}
-                                className={`transition-all duration-300 rounded-full ${
-                                    index === currentIndex 
-                                        ? 'w-8 h-3 bg-nss-red' 
-                                        : 'w-3 h-3 bg-white/50 hover:bg-white'
-                                }`}
-                                aria-label={`Go to slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
+                    {sliderEvents.length > 1 && (
+                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-3 z-20">
+                            {sliderEvents.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => goToSlide(index)}
+                                    className={`transition-all duration-300 rounded-full ${
+                                        index === currentIndex 
+                                            ? 'w-8 h-3 bg-nss-red' 
+                                            : 'w-3 h-3 bg-white/50 hover:bg-white'
+                                    }`}
+                                    aria-label={`Go to slide ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

@@ -23,6 +23,7 @@ export const PERMISSIONS = {
     // Activities & Gallery
     MANAGE_ACTIVITIES: ['admin'],
     MANAGE_GALLERY: ['admin'],
+    MANAGE_SLIDER: ['admin'],
 } as const
 
 // Type for permission keys
@@ -56,6 +57,7 @@ export function canAccessRoute(userRole: Volunteer['role'], route: string): bool
         'dashboard/blood-donors': 'ACCESS_BLOOD_DONORS',
         'dashboard/activities': 'MANAGE_ACTIVITIES',
         'dashboard/gallery': 'MANAGE_GALLERY',
+        'dashboard/manage-slider': 'MANAGE_SLIDER',
         'dashboard/statistics': 'EDIT_STATISTICS',
     }
 
@@ -152,6 +154,12 @@ export function getAccessibleMenuItems(role: Volunteer['role']) {
             path: '/dashboard/gallery',
             icon: 'Image',
             permission: 'MANAGE_GALLERY' as PermissionKey,
+        },
+        {
+            name: 'Home Slider',
+            path: '/dashboard/manage-slider',
+            icon: 'Image',
+            permission: 'MANAGE_SLIDER' as PermissionKey,
         },
         {
             name: 'Statistics',

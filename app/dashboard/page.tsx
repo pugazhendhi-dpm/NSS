@@ -345,6 +345,23 @@ export default function DashboardPage() {
                         </div>
                     )}
 
+                    {/* Home Slider - Admin only */}
+                    {hasPermission(volunteer.role, 'MANAGE_SLIDER') && (
+                        <div className="bg-white rounded-lg shadow-lg p-8">
+                            <h2 className="text-2xl font-bold text-nss-blue mb-4">Home Slider</h2>
+                            <p className="text-gray-600 mb-6">
+                                Update the event highlight images and text on the Home Page.
+                            </p>
+                            <Link
+                                href="/dashboard/manage-slider"
+                                className="inline-flex items-center space-x-2 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                            >
+                                <Image className="w-5 h-5" />
+                                <span>Manage Slider</span>
+                            </Link>
+                        </div>
+                    )}
+
                     {/* Blood Donation Records - Admin & Supersenior */}
                     {hasPermission(volunteer.role, 'VIEW_CAMPAIGNS') && (
                         <div className="bg-white rounded-lg shadow-lg p-8 border-l-4 border-red-500">
