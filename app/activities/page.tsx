@@ -116,7 +116,7 @@ export default function ActivitiesPage() {
                                 : 'bg-white text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
-                            Regular Activities (120 Hours)
+                            Sustainable Initiatives
                         </button>
                         <button
                             onClick={() => setFilter('Special Camps')}
