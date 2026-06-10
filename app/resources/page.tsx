@@ -8,6 +8,7 @@ const resources = [
         fileSize: '1.2 MB',
         fileType: 'PDF',
         downloadUrl: '/assets/docs/nss-rules-regulations-kec.pdf',
+        viewUrl: '/assets/docs/nss-rules-regulations-kec.html',
     },
 ]
 
@@ -47,7 +48,7 @@ export default function ResourcesPage() {
                                             </div>
                                             <div className="flex space-x-3">
                                                 <a
-                                                    href={resource.downloadUrl}
+                                                    href={resource.viewUrl || resource.downloadUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="inline-flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-nss-blue px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
