@@ -124,18 +124,18 @@ export default function DonorRegistrationPage() {
                 <div className="absolute inset-0 bg-black/60"></div>
                 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-                    <h1 className="text-5xl md:text-7xl font-serif font-bold mb-2 tracking-wide drop-shadow-lg text-white">
-                        Blood Donation
+                    <div className="flex justify-center mb-4">
+                        <Droplet className="w-16 h-16 text-white drop-shadow-lg" fill="currentColor" />
+                    </div>
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold mb-2 tracking-wide drop-shadow-lg text-white">
+                        Blood Donor
                     </h1>
-                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-yellow-500 drop-shadow-md mb-8">
-                        Guide
+                    <h2 className="text-3xl md:text-5xl font-serif font-bold text-yellow-500 drop-shadow-md mb-6">
+                        Registration
                     </h2>
                     
-                    <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto font-medium tracking-wider mb-4">
-                        Eligibility • Medical Screening • Rules • Regulations • Care
-                    </p>
-                    <p className="text-lg text-gray-300 italic font-medium">
-                        "One Donation. Three Lives Saved."
+                    <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto font-medium tracking-wide">
+                        Register as a blood donor and help save lives in emergencies
                     </p>
                 </div>
             </section>
