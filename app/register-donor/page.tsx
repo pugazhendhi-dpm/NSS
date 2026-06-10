@@ -117,7 +117,7 @@ export default function DonorRegistrationPage() {
         <div className="min-h-screen bg-white">
             {/* Page Header */}
             <section 
-                className="relative text-white py-28 bg-nss-red-dark bg-cover bg-center"
+                className="relative text-white py-28 bg-gray-200 bg-cover bg-center"
                 style={{ backgroundImage: "url('/images/blood-donate-bg.png')" }}
             >
                 {/* Dark overlay for readability */}
