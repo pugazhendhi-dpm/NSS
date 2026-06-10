@@ -108,14 +108,47 @@ export default function AboutPage() {
                                 <h3 className="text-xl font-bold text-nss-blue text-center mb-4">Programme Officers</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                        <div className="flex justify-center mb-3">
+                                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-nss-blue shadow-lg bg-white">
+                                                <Image
+                                                    src="/images/officer-unit1.jpg"
+                                                    alt="Dr. A. Manimaran"
+                                                    width={96}
+                                                    height={96}
+                                                    className="object-cover w-full h-full"
+                                                />
+                                            </div>
+                                        </div>
                                         <h4 className="text-lg font-bold text-nss-red">Unit I</h4>
                                         <p className="text-gray-700 font-semibold mt-2">Dr. A. Manimaran</p>
                                     </div>
                                     <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                        <div className="flex justify-center mb-3">
+                                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-nss-blue shadow-lg bg-white">
+                                                <Image
+                                                    src="/images/officer-unit2.jpg"
+                                                    alt="Dr. K.S. Navaneethan"
+                                                    width={96}
+                                                    height={96}
+                                                    className="object-cover w-full h-full"
+                                                />
+                                            </div>
+                                        </div>
                                         <h4 className="text-lg font-bold text-nss-red">Unit II</h4>
                                         <p className="text-gray-700 font-semibold mt-2">Dr. K.S. Navaneethan</p>
                                     </div>
                                     <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                        <div className="flex justify-center mb-3">
+                                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-nss-blue shadow-lg bg-white">
+                                                <Image
+                                                    src="/images/officer-unit3.jpg"
+                                                    alt="Ms. K. Suvalakshmi"
+                                                    width={96}
+                                                    height={96}
+                                                    className="object-cover w-full h-full"
+                                                />
+                                            </div>
+                                        </div>
                                         <h4 className="text-lg font-bold text-nss-red">Unit III (SFU)</h4>
                                         <p className="text-gray-700 font-semibold mt-2">Ms. K. Suvalakshmi</p>
                                     </div>
