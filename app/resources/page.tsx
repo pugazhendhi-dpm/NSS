@@ -1,4 +1,7 @@
-import { Download, FileText, Music, Award } from 'lucide-react'
+'use client'
+
+import { useState } from 'react'
+import { Download, FileText, Music, Award, Check } from 'lucide-react'
 
 const resources = [
     {
@@ -13,6 +16,21 @@ const resources = [
 ]
 
 export default function ResourcesPage() {
+    const [copied, setCopied] = useState(false)
+
+    const handleContactClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        // Copy to clipboard
+        navigator.clipboard.writeText('nsskec@kongu.ac.in')
+        
+        // Show copied state
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+
+        // Try to open email client
+        window.location.href = 'mailto:nsskec@kongu.ac.in'
+    }
+
     return (
         <div className="min-h-screen bg-white">
             {/* Page Header */}
@@ -82,12 +100,22 @@ export default function ResourcesPage() {
                         <p className="text-gray-100 mb-6">
                             Contact our Programme Officer for additional materials, training resources, or any queries.
                         </p>
-                        <a
-                            href="mailto:nsskec@kongu.ac.in"
-                            className="inline-block bg-white text-nss-blue hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors"
+                        <button
+                            onClick={handleContactClick}
+                            className="inline-flex items-center space-x-2 bg-white text-nss-blue hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors"
                         >
-                            Contact Programme Officer
-                        </a>
+                            {copied ? (
+                                <>
+                                    <Check className="w-5 h-5 text-green-500" />
+                                    <span className="text-green-600">Email Copied!</span>
+                                </>
+                            ) : (
+                                <span>Contact Programme Officer</span>
+                            )}
+                        </button>
+                        <p className="text-xs text-gray-300 mt-3 font-mono opacity-80">
+                            nsskec@kongu.ac.in
+                        </p>
                     </div>
                 </div>
             </section>
