@@ -6,6 +6,7 @@ import UpdatesMarquee from '@/components/home/UpdatesMarquee'
 import BloodDonationImpact from '@/components/home/BloodDonationImpact'
 import TodaySpecialDay from '@/components/home/TodaySpecialDay'
 import RecentDonorsTicker from '@/components/home/RecentDonorsTicker'
+import EventSlider from '@/components/home/EventSlider'
 
 export default function HomePage() {
     return (
@@ -106,6 +107,9 @@ export default function HomePage() {
 
             {/* Blood Donation Impact */}
             <BloodDonationImpact />
+
+            {/* Event Slider */}
+            <EventSlider />
 
             {/* About Preview */}
             <section className="py-16 bg-white">
