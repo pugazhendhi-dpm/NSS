@@ -38,10 +38,18 @@ export async function addSliderEvent(
     title: string,
     subtitle: string,
     imageFile: File,
-    orderIndex: number,
     createdBy: string
 ): Promise<SliderEvent | null> {
     try {
+        // 0. Calculate new order index
+        const { data: maxOrderData } = await supabase
+            .from('slider_events')
+            .select('order_index')
+            .order('order_index', { ascending: false })
+            .limit(1)
+        
+        const newOrderIndex = maxOrderData && maxOrderData.length > 0 ? maxOrderData[0].order_index + 1 : 0;
+
         // 1. Upload image to gallery-images bucket
         const fileExt = imageFile.name.split('.').pop()
         const fileName = `slider-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
@@ -68,7 +76,7 @@ export async function addSliderEvent(
                 title,
                 subtitle,
                 image_url: publicUrl,
-                order_index: orderIndex,
+                order_index: newOrderIndex,
                 created_by: createdBy,
             })
             .select()
@@ -88,6 +96,48 @@ export async function addSliderEvent(
     } catch (error) {
         console.error('Error adding slider event:', error)
         return null
+    }
+}
+
+export async function updateSliderEvent(
+    id: string,
+    title: string,
+    subtitle: string
+): Promise<boolean> {
+    try {
+        const { error } = await supabase
+            .from('slider_events')
+            .update({ title, subtitle })
+            .eq('id', id)
+
+        if (error) throw error
+        return true
+    } catch (error) {
+        console.error('Error updating slider event:', error)
+        return false
+    }
+}
+
+export async function updateSliderOrder(
+    orderedIds: string[]
+): Promise<boolean> {
+    try {
+        // Prepare the upsert payload (we only update order_index for existing records)
+        // Note: Supabase JS doesn't have a bulk update, so we can do it via a loop or by fetching and updating individually. 
+        // Since the list of slides is usually small (e.g. 5-10), a Promise.all with updates is fine.
+        const promises = orderedIds.map((id, index) => 
+            supabase
+                .from('slider_events')
+                .update({ order_index: index })
+                .eq('id', id)
+        )
+
+        await Promise.all(promises)
+        
+        return true
+    } catch (error) {
+        console.error('Error updating slider order:', error)
+        return false
     }
 }
 

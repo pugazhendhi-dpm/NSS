@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Trash2, Upload, Image as ImageIcon, X } from 'lucide-react'
+import { Plus, Trash2, Upload, Image as ImageIcon, X, GripVertical, Edit2, Save, XCircle } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
+import { Reorder } from 'framer-motion'
 import {
     getSliderEvents,
     addSliderEvent,
     deleteSliderEvent,
+    updateSliderEvent,
+    updateSliderOrder,
     subscribeToSliderEvents,
     SliderEvent,
 } from '@/lib/sliderService'
@@ -18,11 +21,14 @@ export default function ManageSliderPage() {
     const [events, setEvents] = useState<SliderEvent[]>([])
     const [isAdding, setIsAdding] = useState(false)
     const [uploading, setUploading] = useState(false)
+    
+    // Editing state
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editFormData, setEditFormData] = useState({ title: '', subtitle: '' })
 
     const [formData, setFormData] = useState({
         title: '',
         subtitle: '',
-        orderIndex: 0,
         imageFile: null as File | null,
         imagePreview: '',
     })
@@ -38,7 +44,6 @@ export default function ManageSliderPage() {
         const loadEvents = async () => {
             const data = await getSliderEvents()
             setEvents(data)
-            setFormData(prev => ({ ...prev, orderIndex: data.length }))
         }
         loadEvents()
 
@@ -54,7 +59,6 @@ export default function ManageSliderPage() {
         setFormData({
             title: '',
             subtitle: '',
-            orderIndex: events.length,
             imageFile: null,
             imagePreview: '',
         })
@@ -88,7 +92,6 @@ export default function ManageSliderPage() {
                 formData.title,
                 formData.subtitle,
                 formData.imageFile,
-                formData.orderIndex,
                 volunteer.name
             )
 
@@ -110,6 +113,32 @@ export default function ManageSliderPage() {
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this slide?')) {
             await deleteSliderEvent(id)
+        }
+    }
+
+    const handleReorder = async (newOrder: SliderEvent[]) => {
+        setEvents(newOrder)
+        const orderedIds = newOrder.map(e => e.id)
+        await updateSliderOrder(orderedIds)
+    }
+
+    const startEditing = (event: SliderEvent) => {
+        setEditingId(event.id)
+        setEditFormData({ title: event.title, subtitle: event.subtitle })
+    }
+
+    const cancelEditing = () => {
+        setEditingId(null)
+    }
+
+    const saveEdit = async (id: string) => {
+        const success = await updateSliderEvent(id, editFormData.title, editFormData.subtitle)
+        if (success) {
+            setEditingId(null)
+            // Local state update is handled by realtime subscription, but we can do it optimistically
+            setEvents(events.map(e => e.id === id ? { ...e, title: editFormData.title, subtitle: editFormData.subtitle } : e))
+        } else {
+            alert("Failed to update slide.")
         }
     }
 
@@ -149,7 +178,7 @@ export default function ManageSliderPage() {
                 {!isAdding ? (
                     <button
                         onClick={() => setIsAdding(true)}
-                        className="btn-primary mb-6 flex items-center space-x-2"
+                        className="btn-primary mb-6 flex items-center space-x-2 shadow-lg"
                     >
                         <Plus className="w-5 h-5" />
                         <span>Add New Slide</span>
@@ -221,21 +250,9 @@ export default function ManageSliderPage() {
                                         value={formData.subtitle}
                                         onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
                                         className="input-field resize-none"
-                                        rows={2}
+                                        rows={4}
                                         placeholder="Brief description that appears over the image"
                                     />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Order Index</label>
-                                    <input
-                                        type="number"
-                                        value={formData.orderIndex}
-                                        onChange={(e) => setFormData({ ...formData, orderIndex: parseInt(e.target.value) || 0 })}
-                                        className="input-field w-1/3"
-                                        min="0"
-                                    />
-                                    <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
                                 </div>
                             </div>
                         </div>
@@ -264,48 +281,113 @@ export default function ManageSliderPage() {
                 )}
 
                 {/* Slides List */}
-                <div className="space-y-6">
+                {events.length > 0 && (
+                    <div className="mb-4 text-sm text-gray-500 italic">
+                        Tip: Drag and drop the handle (⋮⋮) to reorder the slides.
+                    </div>
+                )}
+                
+                <Reorder.Group axis="y" values={events} onReorder={handleReorder} className="space-y-4">
                     {events.map((event) => (
-                        <div
-                            key={event.id}
-                            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row relative"
+                        <Reorder.Item 
+                            key={event.id} 
+                            value={event}
+                            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row relative group cursor-default border border-transparent hover:border-gray-200"
                         >
-                            <div className="w-full md:w-1/3 h-48 relative bg-gray-200">
+                            {/* Drag Handle */}
+                            <div className="flex items-center justify-center p-3 bg-gray-50 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 transition-colors">
+                                <GripVertical className="w-6 h-6" />
+                            </div>
+
+                            <div className="w-full md:w-64 h-40 relative bg-gray-200 shrink-0">
                                 <img
                                     src={event.imageUrl}
                                     alt={event.title}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <div className="p-6 flex-1 flex flex-col justify-between">
-                                <div>
-                                    <div className="flex justify-between items-start">
-                                        <h3 className="text-xl font-bold text-nss-blue mb-2">{event.title}</h3>
-                                        <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded">
-                                            Order: {event.orderIndex}
-                                        </span>
+                            
+                            <div className="p-5 flex-1 flex flex-col justify-between">
+                                {editingId === event.id ? (
+                                    <div className="space-y-3 w-full">
+                                        <input
+                                            type="text"
+                                            value={editFormData.title}
+                                            onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                                            className="input-field text-lg font-bold py-1 px-2"
+                                            placeholder="Title"
+                                        />
+                                        <textarea
+                                            value={editFormData.subtitle}
+                                            onChange={(e) => setEditFormData({ ...editFormData, subtitle: e.target.value })}
+                                            className="input-field text-sm resize-none py-1 px-2"
+                                            rows={2}
+                                            placeholder="Subtitle"
+                                        />
                                     </div>
-                                    <p className="text-gray-600">{event.subtitle}</p>
-                                </div>
-                                <div className="mt-4 flex justify-between items-center">
-                                    <p className="text-xs text-gray-400">Added by: {event.createdBy}</p>
-                                    <button
-                                        onClick={() => handleDelete(event.id)}
-                                        className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors flex items-center space-x-1"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                        <span className="text-sm font-medium">Delete</span>
-                                    </button>
+                                ) : (
+                                    <div>
+                                        <div className="flex justify-between items-start">
+                                            <h3 className="text-xl font-bold text-nss-blue mb-1">{event.title}</h3>
+                                            <span className="bg-blue-50 text-nss-blue border border-blue-100 text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap ml-4">
+                                                Order: {event.orderIndex}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-600 mt-1 line-clamp-2">{event.subtitle}</p>
+                                    </div>
+                                )}
+
+                                <div className="mt-4 flex justify-between items-center border-t border-gray-100 pt-3">
+                                    <p className="text-xs text-gray-400 font-medium">Added by: {event.createdBy}</p>
+                                    
+                                    <div className="flex space-x-2">
+                                        {editingId === event.id ? (
+                                            <>
+                                                <button
+                                                    onClick={cancelEditing}
+                                                    className="text-gray-500 hover:bg-gray-100 px-3 py-1.5 rounded-lg transition-colors flex items-center space-x-1"
+                                                >
+                                                    <XCircle className="w-4 h-4" />
+                                                    <span className="text-sm font-medium">Cancel</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => saveEdit(event.id)}
+                                                    className="text-green-600 hover:bg-green-50 px-3 py-1.5 rounded-lg transition-colors flex items-center space-x-1"
+                                                >
+                                                    <Save className="w-4 h-4" />
+                                                    <span className="text-sm font-medium">Save</span>
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    onClick={() => startEditing(event)}
+                                                    className="text-blue-500 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors flex items-center space-x-1"
+                                                >
+                                                    <Edit2 className="w-4 h-4" />
+                                                    <span className="text-sm font-medium">Edit</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(event.id)}
+                                                    className="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors flex items-center space-x-1"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                    <span className="text-sm font-medium">Delete</span>
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Reorder.Item>
                     ))}
-                </div>
+                </Reorder.Group>
 
                 {events.length === 0 && (
-                    <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+                    <div className="text-center py-16 bg-white rounded-lg shadow-sm border border-dashed border-gray-300">
                         <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500">No slides found. Upload your first slider image!</p>
+                        <p className="text-gray-500 font-medium">No slides found</p>
+                        <p className="text-gray-400 text-sm mt-1">Upload your first slider image above!</p>
                     </div>
                 )}
             </div>
