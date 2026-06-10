@@ -41,18 +41,29 @@ export default function ResourcesPage() {
                                     <div className="flex-1">
                                         <h3 className="text-lg font-bold text-nss-blue mb-2">{resource.title}</h3>
                                         <p className="text-gray-600 text-sm mb-3">{resource.description}</p>
-                                        <div className="flex items-center justify-between">
+                                        <div className="flex items-center justify-between mt-4">
                                             <div className="text-xs text-gray-500">
                                                 <span className="font-semibold">{resource.fileType}</span> • {resource.fileSize}
                                             </div>
-                                            <a
-                                                href={resource.downloadUrl}
-                                                download
-                                                className="inline-flex items-center space-x-2 bg-nss-red hover:bg-nss-red-dark text-white px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
-                                            >
-                                                <Download className="w-4 h-4" />
-                                                <span>Download</span>
-                                            </a>
+                                            <div className="flex space-x-3">
+                                                <a
+                                                    href={resource.downloadUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-nss-blue px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
+                                                >
+                                                    <FileText className="w-4 h-4" />
+                                                    <span>View</span>
+                                                </a>
+                                                <a
+                                                    href={resource.downloadUrl}
+                                                    download
+                                                    className="inline-flex items-center space-x-2 bg-nss-red hover:bg-nss-red-dark text-white px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
+                                                >
+                                                    <Download className="w-4 h-4" />
+                                                    <span>Download</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
