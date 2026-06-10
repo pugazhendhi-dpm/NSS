@@ -115,7 +115,7 @@ export default function AboutPage() {
                                                     alt="Dr. A. Manimaran"
                                                     width={96}
                                                     height={96}
-                                                    className="object-cover w-full h-full"
+                                                    className="object-cover object-top w-full h-full"
                                                 />
                                             </div>
                                         </div>
@@ -130,7 +130,7 @@ export default function AboutPage() {
                                                     alt="Dr. K.S. Navaneethan"
                                                     width={96}
                                                     height={96}
-                                                    className="object-cover w-full h-full"
+                                                    className="object-cover object-top w-full h-full"
                                                 />
                                             </div>
                                         </div>
