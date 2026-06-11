@@ -78,7 +78,7 @@ export default function ResourcesPage() {
                                                     href={resource.viewUrl || resource.downloadUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-nss-blue px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
+                                                    className="inline-flex items-center space-x-2 bg-nss-blue hover:bg-nss-blue-dark text-white px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
                                                 >
                                                     <FileText className="w-4 h-4" />
                                                     <span>View</span>
