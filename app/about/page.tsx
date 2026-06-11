@@ -112,12 +112,12 @@ export default function AboutPage() {
                                         />
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-nss-blue">Principal</h3>
+                                <h3 className="text-2xl font-bold text-nss-blue">Principal</h3>
                                 <p className="text-gray-700 font-semibold mt-2">Dr. Parameshwaran R</p>
                                 <p className="text-gray-600 text-sm">Chief Patron</p>
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-nss-blue text-center mb-4">Programme Officers</h3>
+                                <h3 className="text-2xl font-bold text-nss-blue text-center mb-4">Programme Officers</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="text-center p-4 bg-gray-50 rounded-lg">
                                         <div className="flex justify-center mb-3">
