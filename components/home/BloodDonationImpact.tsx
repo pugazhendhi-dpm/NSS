@@ -5,6 +5,7 @@ import { Droplet, Users } from 'lucide-react'
 import { getBloodDonationYearRecords, groupByYear, YearSummary } from '@/lib/bloodDonationYearService'
 
 export default function BloodDonationImpact() {
+    const [showAll, setShowAll] = useState(false)
     const [allYearSummaries, setAllYearSummaries] = useState<YearSummary[]>([])
     const [yearSummaries, setYearSummaries] = useState<YearSummary[]>([])
     const [loading, setLoading] = useState(true)
@@ -70,10 +71,12 @@ export default function BloodDonationImpact() {
                     <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">
                         Year-wise Blood Donation Records
                     </h3>
-                    <p className="text-gray-500 text-sm text-center mb-8">Last {yearSummaries.length} academic years</p>
+                    <p className="text-gray-500 text-sm text-center mb-8">
+                        {showAll ? `All ${allYearSummaries.length} academic years` : `Last ${yearSummaries.length} academic years`}
+                    </p>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-                        {yearSummaries
+                        {(showAll ? allYearSummaries : yearSummaries)
                             .slice()
                             .reverse()
                             .map((y, i) => {
@@ -97,6 +100,17 @@ export default function BloodDonationImpact() {
                                 )
                             })}
                     </div>
+
+                    {allYearSummaries.length > 4 && (
+                        <div className="mt-8 text-center">
+                            <button
+                                onClick={() => setShowAll(!showAll)}
+                                className="inline-flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-full transition-colors"
+                            >
+                                {showAll ? 'Show Less ▲' : 'View Full History ▼'}
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Call to Action */}
