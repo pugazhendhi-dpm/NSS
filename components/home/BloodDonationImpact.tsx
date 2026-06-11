@@ -5,6 +5,7 @@ import { Droplet, Users } from 'lucide-react'
 import { getBloodDonationYearRecords, groupByYear, YearSummary } from '@/lib/bloodDonationYearService'
 
 export default function BloodDonationImpact() {
+    const [allYearSummaries, setAllYearSummaries] = useState<YearSummary[]>([])
     const [yearSummaries, setYearSummaries] = useState<YearSummary[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -15,14 +16,14 @@ export default function BloodDonationImpact() {
     const loadStats = async () => {
         const records = await getBloodDonationYearRecords()
         const grouped = groupByYear(records)
-        // Keep only the past 4 years (already sorted descending)
+        setAllYearSummaries(grouped)
+        // Keep only the past 4 years for the cards
         setYearSummaries(grouped.slice(0, 4))
         setLoading(false)
     }
 
-    const totalUnits = yearSummaries.reduce((s, y) => s + y.totalUnits, 0)
-    const totalDonors = yearSummaries.reduce((s, y) => s + y.totalDonors, 0)
-    const maxUnits = Math.max(...yearSummaries.map(y => y.totalUnits), 1)
+    const totalUnits = allYearSummaries.reduce((s, y) => s + y.totalUnits, 0)
+    const totalDonors = allYearSummaries.reduce((s, y) => s + y.totalDonors, 0)
 
     if (loading || yearSummaries.length === 0) return null
 
