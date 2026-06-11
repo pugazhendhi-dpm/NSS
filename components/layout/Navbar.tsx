@@ -115,7 +115,7 @@ export default function Navbar() {
                                 href="/login"
                                 className="border-2 border-white hover:bg-white hover:text-nss-blue px-4 py-2 rounded-lg font-semibold transition-all duration-200"
                             >
-                                Admin Login
+                                Login
                             </Link>
                         )}
                     </div>
@@ -185,7 +185,7 @@ export default function Navbar() {
                                     className="border-2 border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-semibold text-center transition-all duration-200"
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    Admin Login
+                                    Login
                                 </Link>
                             )}
                         </div>
