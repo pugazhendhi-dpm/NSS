@@ -319,6 +319,23 @@ export default function DashboardPage() {
                         </div>
                     )}
 
+                    {/* Featured Volunteers - Admin only */}
+                    {hasPermission(volunteer.role, 'MANAGE_FEATURED_VOLUNTEERS') && (
+                        <div className="bg-white rounded-lg shadow-lg p-8">
+                            <h2 className="text-2xl font-bold text-nss-blue mb-4">Featured Volunteers</h2>
+                            <p className="text-gray-600 mb-6">
+                                Manage the list of student volunteers displayed on the About page.
+                            </p>
+                            <Link
+                                href="/dashboard/manage-volunteers"
+                                className="inline-flex items-center space-x-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                            >
+                                <UserCheck className="w-5 h-5" />
+                                <span>Manage Volunteers</span>
+                            </Link>
+                        </div>
+                    )}
+
                     {/* Home Slider - Admin only */}
                     {hasPermission(volunteer.role, 'MANAGE_SLIDER') && (
                         <div className="bg-white rounded-lg shadow-lg p-8">

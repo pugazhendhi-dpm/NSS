@@ -1,19 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Target, Users, Flag, Award, ChevronDown, ChevronUp } from 'lucide-react'
 import Image from 'next/image'
-
-const volunteers = [
-    { name: "Sabari", dept: "ECE", phone: "9361358813" },
-    { name: "Kabil", dept: "EEE", phone: "9361090547" },
-    { name: "Manoj", dept: "EEE", phone: "8903026773" },
-    { name: "Hari Prasanna", dept: "EIE", phone: "8940374065" },
-    { name: "Santhosh", dept: "AIML", phone: "7502833715" }
-];
+import { FeaturedVolunteer, getFeaturedVolunteers } from '@/lib/featuredVolunteersService'
 
 export default function AboutPage() {
     const [showVolunteers, setShowVolunteers] = useState(false)
+    const [volunteers, setVolunteers] = useState<FeaturedVolunteer[]>([])
+
+    useEffect(() => {
+        const fetchVolunteers = async () => {
+            const data = await getFeaturedVolunteers()
+            setVolunteers(data)
+        }
+        fetchVolunteers()
+    }, [])
     const milestones = [
         'To achieve greater heights of success in educating and uplifting the standard of society to a considerable extent around the area of Erode.',
         'To raise up for the best NSS team for social service',
@@ -182,12 +184,12 @@ export default function AboutPage() {
 
                                 <div className={`transition-all duration-500 ease-in-out overflow-hidden ${showVolunteers ? 'max-h-[2000px] mt-8 opacity-100' : 'max-h-0 opacity-0'}`}>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
-                                        {volunteers.map((vol, idx) => (
-                                            <div key={idx} className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-nss-blue hover:shadow-md transition-shadow">
+                                        {volunteers.map((vol) => (
+                                            <div key={vol.id} className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-nss-blue hover:shadow-md transition-shadow">
                                                 <h4 className="font-bold text-gray-800 text-lg mb-1">{vol.name}</h4>
                                                 <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">Volunteer</p>
                                                 <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                                                    <span className="bg-blue-50 text-nss-blue text-xs font-bold px-2.5 py-1 rounded-md border border-blue-100">{vol.dept}</span>
+                                                    <span className="bg-blue-50 text-nss-blue text-xs font-bold px-2.5 py-1 rounded-md border border-blue-100">{vol.department}</span>
                                                     <a href={`tel:+91${vol.phone}`} className="text-sm font-semibold text-gray-600 hover:text-nss-red transition-colors">
                                                         +91 {vol.phone}
                                                     </a>
