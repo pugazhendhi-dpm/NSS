@@ -122,8 +122,6 @@ export default function LoginPage() {
                                 <p className="text-xs font-semibold text-purple-800 mb-1">👑 Administrator (Full Access)</p>
                                 <p className="text-xs text-gray-700">
                                     <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700">nsskec@kongu.edu</code>
-                                    <span className="mx-2 text-gray-400">|</span>
-                                    Pass: <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700">pugazh</code>
                                 </p>
                             </div>
 
@@ -132,8 +130,6 @@ export default function LoginPage() {
                                 <p className="text-xs font-semibold text-blue-800 mb-1">⭐ Super Senior (Limited Access)</p>
                                 <p className="text-xs text-gray-700">
                                     <code className="bg-blue-50 px-1.5 py-0.5 rounded text-blue-700">supersenior@kongu.edu</code>
-                                    <span className="mx-2 text-gray-400">|</span>
-                                    Pass: <code className="bg-blue-50 px-1.5 py-0.5 rounded text-blue-700">nss</code>
                                 </p>
                             </div>
 
@@ -142,8 +138,6 @@ export default function LoginPage() {
                                 <p className="text-xs font-semibold text-green-800 mb-1">👤 Volunteer (Blood Donors Only)</p>
                                 <p className="text-xs text-gray-700">
                                     <code className="bg-green-50 px-1.5 py-0.5 rounded text-green-700">volunteer@kongu.edu</code>
-                                    <span className="mx-2 text-gray-400">|</span>
-                                    Pass: <code className="bg-green-50 px-1.5 py-0.5 rounded text-green-700">nss</code>
                                 </p>
                             </div>
                         </div>
