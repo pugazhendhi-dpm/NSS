@@ -53,7 +53,7 @@ export default function BloodDonationImpact() {
                             <Droplet className="w-8 h-8 text-white" />
                         </div>
                         <div className="text-5xl font-bold text-blue-600 mb-2">{totalUnits}</div>
-                        <div className="text-gray-600 font-semibold">Total Units Collected</div>
+                        <div className="text-gray-600 font-semibold">Total Units Donated</div>
                         <div className="text-xs text-gray-500 mt-1">Blood units donated</div>
                     </div>
                     <div className="bg-white rounded-2xl shadow-xl p-8 text-center transform hover:scale-105 transition-transform duration-300">
