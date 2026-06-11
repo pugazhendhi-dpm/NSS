@@ -631,7 +631,7 @@ export default function BloodDonorsPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <a
-                                href="mailto:nsskec@kongu.ac.in?subject=Blood Command Center Feedback"
+                                href="mailto:nsskec@kongu.edu?subject=Blood Command Center Feedback"
                                 className="inline-flex items-center space-x-2 bg-white text-nss-blue hover:bg-gray-100 font-bold py-3 px-6 rounded-lg transition-colors shadow-lg"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

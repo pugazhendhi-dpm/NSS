@@ -6,7 +6,7 @@ export const mockVolunteers: Volunteer[] = [
     {
         id: '1',
         name: 'Admin User',
-        email: 'nsskec@kongu.ac.in',
+        email: 'nsskec@kongu.edu',
         rollNumber: '2024CSE001',
         department: 'Computer Science & Engineering (CSE)',
         year: '4th',

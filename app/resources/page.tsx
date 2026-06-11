@@ -30,14 +30,14 @@ export default function ResourcesPage() {
     const handleContactClick = (e: React.MouseEvent) => {
         e.preventDefault()
         // Copy to clipboard
-        navigator.clipboard.writeText('nsskec@kongu.ac.in')
+        navigator.clipboard.writeText('nsskec@kongu.edu')
         
         // Show copied state
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
 
         // Try to open email client
-        window.location.href = 'mailto:nsskec@kongu.ac.in'
+        window.location.href = 'mailto:nsskec@kongu.edu'
     }
 
     return (
@@ -123,7 +123,7 @@ export default function ResourcesPage() {
                             )}
                         </button>
                         <p className="text-xs text-gray-300 mt-3 font-mono opacity-80">
-                            nsskec@kongu.ac.in
+                            nsskec@kongu.edu
                         </p>
                     </div>
                 </div>

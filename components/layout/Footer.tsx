@@ -96,8 +96,8 @@ export default function Footer() {
                             </li>
                             <li className="flex items-start space-x-2">
                                 <Mail className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                                <a href="mailto:nsskec@kongu.ac.in" className="text-gray-200 hover:text-nss-red transition-colors">
-                                    nsskec@kongu.ac.in
+                                <a href="mailto:nsskec@kongu.edu" className="text-gray-200 hover:text-nss-red transition-colors">
+                                    nsskec@kongu.edu
                                 </a>
                             </li>
                             <li className="flex items-start space-x-2">
@@ -122,7 +122,7 @@ export default function Footer() {
                             <p className="text-xs text-gray-300 mb-3">Help us improve! Share suggestions or report issues.</p>
                             <div className="flex flex-col sm:flex-row gap-2 justify-center">
                                 <a
-                                    href="https://mail.google.com/mail/?view=cm&fs=1&to=nsskec@kongu.ac.in&su=NSS+Website+Feedback"
+                                    href="https://mail.google.com/mail/?view=cm&fs=1&to=nsskec@kongu.edu&su=NSS+Website+Feedback"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center justify-center space-x-1 bg-white text-nss-blue px-3 py-1.5 rounded text-xs font-semibold hover:bg-gray-100 transition-colors"
