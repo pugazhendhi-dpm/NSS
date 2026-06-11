@@ -416,7 +416,7 @@ export default function DonorRegistrationPage() {
                                             value={formData.phone}
                                             onChange={handleChange}
                                             className="input-field"
-                                            placeholder="+91 98765 43210"
+                                            placeholder="98765 43210"
                                         />
                                     </div>
 
@@ -431,7 +431,7 @@ export default function DonorRegistrationPage() {
                                             value={formData.alternatePhone}
                                             onChange={handleChange}
                                             className="input-field"
-                                            placeholder="+91 98765 43211 (Optional)"
+                                            placeholder="98765 43211 (Optional)"
                                         />
                                     </div>
                                 </div>

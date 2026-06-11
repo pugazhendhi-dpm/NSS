@@ -16,7 +16,7 @@ export default function FeedbackSection() {
                     <span>Send Feedback via Email</span>
                 </a>
                 <a
-                    href="tel:+919965398712"
+                    href="tel:9965398712"
                     className="inline-flex items-center justify-center space-x-2 bg-nss-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-nss-red-dark transition-colors"
                 >
                     <Phone className="w-5 h-5" />

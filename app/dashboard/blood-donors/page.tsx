@@ -640,7 +640,7 @@ export default function BloodDonorsPage() {
                                 <span>Send Feedback via Email</span>
                             </a>
                             <a
-                                href="tel:+919876543210"
+                                href="tel:9876543210"
                                 className="inline-flex items-center space-x-2 bg-nss-red hover:bg-nss-red-dark text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg"
                             >
                                 <Phone className="w-5 h-5" />

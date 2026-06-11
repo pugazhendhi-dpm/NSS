@@ -105,11 +105,11 @@ export default function Footer() {
                                 <div className="text-gray-200 space-y-1">
                                     <p className="font-semibold text-white">Program Officers:</p>
                                     <p>Unit I: Dr. A. Manimaran<br />
-                                        <a href="tel:+919965398712" className="hover:text-nss-red transition-colors">9965398712</a></p>
+                                        <a href="tel:9965398712" className="hover:text-nss-red transition-colors">9965398712</a></p>
                                     <p>Unit II: Dr. K.S. Navaneethan<br />
-                                        <a href="tel:+918056554879" className="hover:text-nss-red transition-colors">8056554879</a></p>
+                                        <a href="tel:8056554879" className="hover:text-nss-red transition-colors">8056554879</a></p>
                                     <p>Unit III (SFU): Ms. K. Suvalakshmi<br />
-                                        <a href="tel:+919384538700" className="hover:text-nss-red transition-colors">9384538700</a></p>
+                                        <a href="tel:9384538700" className="hover:text-nss-red transition-colors">9384538700</a></p>
                                 </div>
                             </li>
                         </ul>
@@ -131,7 +131,7 @@ export default function Footer() {
                                     <span>Email Feedback</span>
                                 </a>
                                 <a
-                                    href="tel:+919965398712"
+                                    href="tel:9965398712"
                                     className="inline-flex items-center justify-center space-x-1 bg-nss-red text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-nss-red-dark transition-colors"
                                 >
                                     <Phone className="w-3 h-3" />

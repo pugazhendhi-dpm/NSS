@@ -287,7 +287,7 @@ export default function JoinPage() {
                                     value={formData.phone}
                                     onChange={handleChange}
                                     className="input-field"
-                                    placeholder="+91 98765 43210"
+                                    placeholder="98765 43210"
                                 />
                             </div>
 
