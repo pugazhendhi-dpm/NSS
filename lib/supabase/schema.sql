@@ -150,6 +150,7 @@ CREATE POLICY "Authenticated users can delete" ON updates FOR DELETE USING (true
 CREATE POLICY "Public read access" ON blood_donors FOR SELECT USING (true);
 CREATE POLICY "Authenticated users can insert" ON blood_donors FOR INSERT WITH CHECK (true);
 CREATE POLICY "Authenticated users can update" ON blood_donors FOR UPDATE USING (true);
+CREATE POLICY "Authenticated users can delete" ON blood_donors FOR DELETE USING (true);
 
 -- Volunteers: public can insert (registration), authenticated can read
 CREATE POLICY "Public can register" ON volunteers FOR INSERT WITH CHECK (true);
