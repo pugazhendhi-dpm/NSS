@@ -7,7 +7,7 @@ import Autocomplete from '@/components/ui/Autocomplete'
 import { addBloodDonor } from '@/lib/bloodDonorsService'
 
 const bloodContacts = [
-    { name: "Rohith", phone: "+91 93446 663073", role: "Blood Camp In-charge" },
+    { name: "Rohith", phone: "+91 93446 63073", role: "Blood Camp In-charge" },
     { name: "Ashwin", phone: "+91 81489 81926", role: "Student Coordinator" },
     { name: "Dhanaraj", phone: "+91 82706 69767", role: "Technical Support" }
 ];
