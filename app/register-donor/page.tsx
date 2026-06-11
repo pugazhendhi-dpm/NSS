@@ -1,10 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, Droplet, AlertCircle } from 'lucide-react'
+import { CheckCircle, Droplet, AlertCircle, Phone } from 'lucide-react'
 import { DEPARTMENTS, YEARS, SECTIONS, EXTENDED_BLOOD_GROUPS, TN_DISTRICTS, TN_TOWNS_BY_DISTRICT, GENDERS, RESIDENTIAL_STATUS } from '@/lib/constants'
 import Autocomplete from '@/components/ui/Autocomplete'
 import { addBloodDonor } from '@/lib/bloodDonorsService'
+
+const bloodContacts = [
+    { name: "Rohith", phone: "+91 93446 663073", role: "Blood Camp In-charge" },
+    { name: "Ashwin", phone: "+91 81489 81926", role: "Student Coordinator" },
+    { name: "Dhanaraj", phone: "+91 82706 69767", role: "Technical Support" }
+];
 
 export default function DonorRegistrationPage() {
     const [formData, setFormData] = useState({
@@ -521,6 +527,34 @@ export default function DonorRegistrationPage() {
                         <p className="text-gray-700 text-sm border-t border-red-100 pt-3">
                             You should always drink lots of water before the donation. Also, keep in mind that you should take a well-balanced meal prior to and after donating blood. This will keep you healthy and fit.
                         </p>
+                    </div>
+
+                    {/* Emergency Support Card */}
+                    <div className="mt-6 bg-white border border-red-200 shadow-sm p-6 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-3">
+                            <span className="text-2xl" aria-hidden="true">🩸</span>
+                            <h3 className="font-bold text-nss-red-dark text-lg">Emergency Support & Blood Queries</h3>
+                        </div>
+                        <p className="text-gray-700 text-sm mb-5">
+                            If you have any doubts regarding donor eligibility or the registration process, please contact our NSS Student Coordinators:
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {bloodContacts.map((contact, index) => (
+                                <div key={index} className="bg-red-50 p-4 rounded border border-red-100 flex flex-col items-center text-center hover:shadow-md transition-shadow">
+                                    <div className="w-10 h-10 bg-nss-red text-white rounded-full flex items-center justify-center mb-2">
+                                        <Phone className="w-5 h-5" />
+                                    </div>
+                                    <h4 className="font-bold text-gray-800">{contact.name}</h4>
+                                    <p className="text-xs text-gray-500 mb-2">{contact.role}</p>
+                                    <a 
+                                        href={`tel:${contact.phone.replace(/\s+/g, '')}`} 
+                                        className="text-nss-red font-semibold hover:text-nss-red-dark transition-colors"
+                                    >
+                                        {contact.phone}
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
