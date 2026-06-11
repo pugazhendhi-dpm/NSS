@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Users, Clock, Droplet, Home } from 'lucide-react'
 import { getStats, subscribeToStats, ImpactStats } from '@/lib/statsService'
+import { getBloodDonationYearRecords } from '@/lib/bloodDonationYearService'
 
 export default function ImpactCounter() {
     const [stats, setStats] = useState<ImpactStats | null>(null)
@@ -17,14 +18,18 @@ export default function ImpactCounter() {
         // Load initial stats (async)
         const loadStats = async () => {
             const initialStats = await getStats()
-            setStats(initialStats)
+            const records = await getBloodDonationYearRecords()
+            const totalBloodUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
+            setStats({ ...initialStats, bloodUnitsDonated: totalBloodUnits })
         }
         loadStats()
 
         // Subscribe to stats changes
         const unsubscribe = subscribeToStats(async () => {
             const newStats = await getStats()
-            setStats(newStats)
+            const records = await getBloodDonationYearRecords()
+            const totalBloodUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
+            setStats({ ...newStats, bloodUnitsDonated: totalBloodUnits })
         })
 
         return unsubscribe

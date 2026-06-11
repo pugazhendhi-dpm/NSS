@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { TrendingUp, Users, Clock, Droplet, Home, Save, RotateCcw } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { getStats, updateStats, ImpactStats } from '@/lib/statsService'
+import { getBloodDonationYearRecords } from '@/lib/bloodDonationYearService'
 
 export default function StatisticsManagementPage() {
     const router = useRouter()
@@ -29,11 +30,14 @@ export default function StatisticsManagementPage() {
         // Load current stats (async)
         const loadStats = async () => {
             const currentStats = await getStats()
-            setStats(currentStats)
+            const records = await getBloodDonationYearRecords()
+            const totalBloodUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
+            
+            setStats({ ...currentStats, bloodUnitsDonated: totalBloodUnits })
             setFormData({
                 volunteersEnrolled: currentStats.volunteersEnrolled,
                 hoursOfService: currentStats.hoursOfService,
-                bloodUnitsDonated: currentStats.bloodUnitsDonated,
+                bloodUnitsDonated: totalBloodUnits,
                 villagesAdopted: currentStats.villagesAdopted,
             })
         }
@@ -175,21 +179,27 @@ export default function StatisticsManagementPage() {
                             />
                         </div>
 
-                        {/* Blood Units Donated */}
-                        <div>
+                        {/* Blood Units Donated (Read-only) */}
+                        <div className="opacity-75">
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                <div className="flex items-center space-x-2">
-                                    <Droplet className="w-5 h-5 text-nss-red" />
-                                    <span>Blood Units Donated</span>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                        <Droplet className="w-5 h-5 text-nss-red" />
+                                        <span>Blood Units Donated</span>
+                                    </div>
+                                    <span className="text-xs text-nss-red bg-red-50 px-2 py-1 rounded">Auto-calculated</span>
                                 </div>
                             </label>
                             <input
                                 type="number"
                                 value={formData.bloodUnitsDonated}
-                                onChange={(e) => handleChange('bloodUnitsDonated', e.target.value)}
-                                className="input-field text-2xl font-bold"
-                                min="0"
+                                readOnly
+                                disabled
+                                className="input-field text-2xl font-bold bg-gray-100 cursor-not-allowed"
                             />
+                            <p className="text-xs text-gray-500 mt-2">
+                                This value is automatically calculated from the Blood Donation Records.
+                            </p>
                         </div>
 
                         {/* Villages Adopted */}
