@@ -544,8 +544,7 @@ export default function DonorRegistrationPage() {
                                     <div className="w-10 h-10 bg-nss-red text-white rounded-full flex items-center justify-center mb-2">
                                         <Phone className="w-5 h-5" />
                                     </div>
-                                    <h4 className="font-bold text-gray-800">{contact.name}</h4>
-                                    <p className="text-xs text-gray-500 mb-2">{contact.role}</p>
+                                    <h4 className="font-bold text-gray-800 mb-2">{contact.name}</h4>
                                     <a 
                                         href={`tel:${contact.phone.replace(/\s+/g, '')}`} 
                                         className="text-nss-red font-semibold hover:text-nss-red-dark transition-colors"
