@@ -137,7 +137,7 @@ export default function LoginPage() {
                             <div className="bg-white p-2 rounded border border-green-200">
                                 <p className="text-xs font-semibold text-green-800 mb-1">👤 Volunteer (Blood Donors Only)</p>
                                 <p className="text-xs text-gray-700">
-                                    <code className="bg-green-50 px-1.5 py-0.5 rounded text-green-700">volunteer@college.edu</code>
+                                    <code className="bg-green-50 px-1.5 py-0.5 rounded text-green-700">volunteer@kongu.edu</code>
                                 </p>
                             </div>
                         </div>
