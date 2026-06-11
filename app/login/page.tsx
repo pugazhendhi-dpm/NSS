@@ -24,7 +24,13 @@ export default function LoginPage() {
             const volunteer = await authenticateVolunteer(formData.email, formData.password)
 
             if (volunteer) {
-                // Store volunteer info in session storage
+                if (volunteer.role === 'volunteer') {
+                    setError('Access Denied. Only Admins and Super Seniors can access the dashboard to protect donor privacy.')
+                    setLoading(false)
+                    return
+                }
+
+                // Store info in session storage
                 sessionStorage.setItem('volunteer', JSON.stringify(volunteer))
 
                 // Trigger custom event to update navbar immediately
@@ -57,8 +63,8 @@ export default function LoginPage() {
                             />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Volunteer Login</h1>
-                    <p className="text-gray-200">Access the Blood Command Center</p>
+                    <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
+                    <p className="text-gray-200">Access the NSS Command Center</p>
                 </div>
 
                 {/* Login Form */}
@@ -130,14 +136,6 @@ export default function LoginPage() {
                                 <p className="text-xs font-semibold text-blue-800 mb-1">⭐ Super Senior (Limited Access)</p>
                                 <p className="text-xs text-gray-700">
                                     <code className="bg-blue-50 px-1.5 py-0.5 rounded text-blue-700">supersenior@kongu.edu</code>
-                                </p>
-                            </div>
-
-                            {/* Volunteer Account */}
-                            <div className="bg-white p-2 rounded border border-green-200">
-                                <p className="text-xs font-semibold text-green-800 mb-1">👤 Volunteer (Blood Donors Only)</p>
-                                <p className="text-xs text-gray-700">
-                                    <code className="bg-green-50 px-1.5 py-0.5 rounded text-green-700">volunteer@kongu.edu</code>
                                 </p>
                             </div>
                         </div>
