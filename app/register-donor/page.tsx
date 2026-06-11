@@ -30,6 +30,7 @@ export default function DonorRegistrationPage() {
         address: '',
         bloodDonationWillingness: '',
         residentialStatus: '',
+        lastDonationDate: '',
     })
     const [submitted, setSubmitted] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -59,6 +60,7 @@ export default function DonorRegistrationPage() {
                 alternatePhone: formData.alternatePhone || undefined,
                 bloodDonationWillingness: formData.bloodDonationWillingness || undefined,
                 residentialStatus: formData.residentialStatus || undefined,
+                lastDonationDate: formData.lastDonationDate || undefined,
             })
 
             if (result) {
@@ -402,6 +404,22 @@ export default function DonorRegistrationPage() {
                                             <option value="Maybe">Maybe, Depends on Situation</option>
                                             <option value="No">No, Just Registering Info</option>
                                         </select>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="lastDonationDate" className="block text-sm font-semibold text-gray-700 mb-2">
+                                            Last Donation Date (Optional)
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="lastDonationDate"
+                                            name="lastDonationDate"
+                                            value={formData.lastDonationDate}
+                                            onChange={handleChange}
+                                            className="input-field"
+                                            max={new Date().toISOString().split('T')[0]}
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">If you remember your last donation date, please provide it.</p>
                                     </div>
                                 </div>
                             </div>

@@ -46,6 +46,7 @@ export async function addBloodDonor(donorData: {
     alternatePhone?: string
     bloodDonationWillingness?: string
     residentialStatus?: string
+    lastDonationDate?: string
 }): Promise<BloodDonor | null> {
     try {
         const { data, error } = await supabase
@@ -69,6 +70,7 @@ export async function addBloodDonor(donorData: {
                 alternate_phone: donorData.alternatePhone,
                 blood_donation_willingness: donorData.bloodDonationWillingness,
                 residential_status: donorData.residentialStatus,
+                last_donation_date: donorData.lastDonationDate || null,
             })
             .select()
             .single()
