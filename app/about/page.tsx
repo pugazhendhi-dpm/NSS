@@ -9,12 +9,7 @@ const volunteers = [
     { name: "Kabil", dept: "EEE", phone: "9361090547" },
     { name: "Manoj", dept: "EEE", phone: "8903026773" },
     { name: "Hari Prasanna", dept: "EIE", phone: "8940374065" },
-    { name: "Santhosh", dept: "AIML", phone: "7502833715" },
-    { name: "Anushree", dept: "AIDS", phone: "7806823807" },
-    { name: "Ragavi", dept: "ECE", phone: "8220026334" },
-    { name: "Gowsika", dept: "EIE", phone: "9965051087" },
-    { name: "Gopika", dept: "EIE", phone: "9943870833" },
-    { name: "Priyanka", dept: "ECE", phone: "9342745330" },
+    { name: "Santhosh", dept: "AIML", phone: "7502833715" }
 ];
 
 export default function AboutPage() {
