@@ -79,6 +79,7 @@ export default function DashboardPage() {
 
     const handleLogout = () => {
         sessionStorage.removeItem('volunteer')
+        window.dispatchEvent(new Event('loginStateChanged'))
         router.push('/')
     }
 
