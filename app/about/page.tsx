@@ -170,7 +170,7 @@ export default function AboutPage() {
                             {/* Volunteers Accordion */}
                             <div className="mt-12 border-t border-blue-300/50 pt-8">
                                 <div className="text-center">
-                                    <h3 className="text-2xl font-bold text-nss-blue mb-6">NSS Student Leaders & Volunteers</h3>
+                                    <h3 className="text-2xl font-bold text-nss-blue mb-6">NSS Student Volunteers</h3>
                                     <button
                                         onClick={() => setShowVolunteers(!showVolunteers)}
                                         className={`inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 shadow-md hover:shadow-lg ${showVolunteers ? 'bg-gray-600 hover:bg-gray-700' : 'bg-nss-blue hover:bg-nss-blue-dark'}`}
