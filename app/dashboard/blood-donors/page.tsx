@@ -8,6 +8,7 @@ import { EXTENDED_BLOOD_GROUPS } from '@/lib/constants'
 import { getBloodDonors, subscribeToBloodDonors, deleteBloodDonor } from '@/lib/bloodDonorsService'
 import { getDonorStatus, getTimeSince, canCallDonor } from '@/lib/utils'
 import EmergencyDonorSearch from '@/components/EmergencyDonorSearch'
+import * as XLSX from 'xlsx'
 
 // Extended donor interface for the database page
 interface DetailedDonor {
@@ -174,32 +175,31 @@ export default function BloodDonorsPage() {
     }
 
     const handleExport = () => {
-        const headers = [
-            'Name', 'Roll No', 'Age', 'Gender', 'Blood Group', 
-            'Phone', 'Alternate Phone', 'Email', 'Department', 
-            'Year', 'Section', 'Residential Status', 'District', 
-            'Hometown', 'Address', 'Willingness', 'Last Donated'
-        ]
-        
-        const csvContent = [
-            headers.join(','),
-            ...filteredDonors.map(d => {
-                const lastDonated = d.lastDonatedAt ? new Date(d.lastDonatedAt).toLocaleDateString() : 'Never'
-                const address = `"${(d.address || '').replace(/"/g, '""')}"`
-                return [
-                    d.name, d.rollNumber, d.age, d.gender, d.bloodGroup, 
-                    d.phone, d.alternatePhone || '', d.email || '', d.department, 
-                    d.year, d.section, d.residentialStatus, d.district, 
-                    d.hometown, address, d.bloodDonationWillingness, lastDonated
-                ].join(',')
-            })
-        ].join('\n')
+        const exportData = filteredDonors.map(d => ({
+            'Name': d.name,
+            'Roll No': d.rollNumber,
+            'Age': d.age,
+            'Gender': d.gender,
+            'Blood Group': d.bloodGroup,
+            'Phone': d.phone,
+            'Alternate Phone': d.alternatePhone || '',
+            'Email': d.email || '',
+            'Department': d.department,
+            'Year': d.year,
+            'Section': d.section,
+            'Residential Status': d.residentialStatus,
+            'District': d.district,
+            'Hometown': d.hometown,
+            'Address': d.address || '',
+            'Willingness': d.bloodDonationWillingness,
+            'Last Donated': d.lastDonatedAt ? new Date(d.lastDonatedAt).toLocaleDateString() : 'Never'
+        }))
 
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.download = `Blood_Donors_${new Date().toISOString().split('T')[0]}.csv`
-        link.click()
+        const worksheet = XLSX.utils.json_to_sheet(exportData)
+        const workbook = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Blood Donors')
+        
+        XLSX.writeFile(workbook, `Blood_Donors_${new Date().toISOString().split('T')[0]}.xlsx`)
     }
 
     const handleDelete = async (donor: DetailedDonor) => {
