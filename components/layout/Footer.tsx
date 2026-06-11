@@ -144,13 +144,24 @@ export default function Footer() {
 
                 {/* Copyright */}
                 <div className="border-t border-gray-600 mt-8 pt-8">
-                    <div className="flex justify-center">
-                        <div className="text-center md:text-right">
+                    <div className="flex flex-col md:flex-row justify-between items-center md:items-end space-y-4 md:space-y-0">
+                        <div className="text-center md:text-left">
                             <p className="text-gray-200 text-sm">
                                 © {currentYear} National Service Scheme - Kongu Engineering College. All Rights Reserved.
                             </p>
                             <p className="text-gray-300 text-xs mt-1">
                                 Affiliated to Anna University, Chennai | Accredited with NAAC A++
+                            </p>
+                        </div>
+                        <div className="text-center md:text-right">
+                            <p className="text-gray-200 text-sm font-semibold">
+                                Website Content Managed by National Service Scheme Team
+                            </p>
+                            <p className="text-gray-300 text-xs mt-1">
+                                Designed & Developed by Pugazhendhi R
+                            </p>
+                            <p className="text-gray-400 text-xs mt-1">
+                                Last Updated: 01 July 2026
                             </p>
                         </div>
                     </div>
