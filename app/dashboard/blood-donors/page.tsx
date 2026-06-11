@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Phone, Filter, Search, Droplet, Clock, User, Building2, AlertCircle, MapPin, Home } from 'lucide-react'
+import { Phone, Filter, Search, Droplet, Clock, User, Building2, AlertCircle, MapPin, Home, Download, Trash2 } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { EXTENDED_BLOOD_GROUPS } from '@/lib/constants'
-import { getBloodDonors, subscribeToBloodDonors } from '@/lib/bloodDonorsService'
+import { getBloodDonors, subscribeToBloodDonors, deleteBloodDonor } from '@/lib/bloodDonorsService'
 import { getDonorStatus, getTimeSince, canCallDonor } from '@/lib/utils'
 import EmergencyDonorSearch from '@/components/EmergencyDonorSearch'
 
@@ -173,6 +173,48 @@ export default function BloodDonorsPage() {
         await loadDonors()
     }
 
+    const handleExport = () => {
+        const headers = [
+            'Name', 'Roll No', 'Age', 'Gender', 'Blood Group', 
+            'Phone', 'Alternate Phone', 'Email', 'Department', 
+            'Year', 'Section', 'Residential Status', 'District', 
+            'Hometown', 'Address', 'Willingness', 'Last Donated'
+        ]
+        
+        const csvContent = [
+            headers.join(','),
+            ...filteredDonors.map(d => {
+                const lastDonated = d.lastDonatedAt ? new Date(d.lastDonatedAt).toLocaleDateString() : 'Never'
+                const address = `"${(d.address || '').replace(/"/g, '""')}"`
+                return [
+                    d.name, d.rollNumber, d.age, d.gender, d.bloodGroup, 
+                    d.phone, d.alternatePhone || '', d.email || '', d.department, 
+                    d.year, d.section, d.residentialStatus, d.district, 
+                    d.hometown, address, d.bloodDonationWillingness, lastDonated
+                ].join(',')
+            })
+        ].join('\n')
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = `Blood_Donors_${new Date().toISOString().split('T')[0]}.csv`
+        link.click()
+    }
+
+    const handleDelete = async (donor: DetailedDonor) => {
+        if (window.confirm(`Are you sure you want to delete ${donor.name} from the database? This action cannot be undone.`)) {
+            const success = await deleteBloodDonor(donor.id)
+            if (success) {
+                alert('Donor deleted successfully.')
+                setSelectedDonor(null)
+                loadDonors()
+            } else {
+                alert('Failed to delete donor. Please try again.')
+            }
+        }
+    }
+
     const departments = Array.from(new Set(donors.map((d) => d.department)))
     const years = Array.from(new Set(donors.map((d) => d.year)))
 
@@ -210,14 +252,22 @@ export default function BloodDonorsPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Emergency Search Button */}
                 <div className="mb-6">
-                    <button
-                        onClick={() => setShowEmergencySearch(true)}
-                        className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-3"
-                    >
-                        <MapPin className="w-6 h-6" />
-                        <span className="text-lg">🚨 Emergency Blood Donor Search</span>
-                        <span className="text-sm bg-white/20 px-3 py-1 rounded-full">Find by Location</span>
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                            onClick={() => setShowEmergencySearch(true)}
+                            className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-3"
+                        >
+                            <MapPin className="w-6 h-6" />
+                            <span className="text-lg">🚨 Emergency Search</span>
+                        </button>
+                        <button
+                            onClick={handleExport}
+                            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-3"
+                        >
+                            <Download className="w-6 h-6" />
+                            <span className="text-lg">📊 Export to Excel</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Filters */}
@@ -738,26 +788,36 @@ export default function BloodDonorsPage() {
                                     <p className="text-sm text-gray-600">Address</p>
                                     <p className="font-semibold">{selectedDonor.address}</p>
                                 </div>
-                            </div>
-                            <div className="flex justify-end space-x-3 pt-4 border-t">
-                                <button
-                                    onClick={() => setSelectedDonor(null)}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-                                >
-                                    Close
-                                </button>
-                                {canCallDonor(selectedDonor.lastCalledAt) && getDonorStatus(selectedDonor.lastCalledAt, selectedDonor.lastDonatedAt) !== 'donated' && (
-                                    <button
-                                        onClick={() => {
-                                            handleCall(selectedDonor)
-                                            setSelectedDonor(null)
-                                        }}
-                                        className="btn-primary flex items-center space-x-2"
-                                    >
-                                        <Phone className="w-4 h-4" />
-                                        <span>Call Donor</span>
-                                    </button>
-                                )}
+                                <div className="flex justify-between items-center pt-4 border-t">
+                                    <div>
+                                        {volunteer?.role === 'admin' && (
+                                            <button
+                                                onClick={() => handleDelete(selectedDonor)}
+                                                className="inline-flex items-center space-x-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                                <span>Delete Donor</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <button
+                                            onClick={() => setSelectedDonor(null)}
+                                            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                        >
+                                            Close
+                                        </button>
+                                        {canCallDonor(selectedDonor.lastCalledAt) && getDonorStatus(selectedDonor.lastCalledAt, selectedDonor.lastDonatedAt) !== 'donated' && (
+                                            <button
+                                                onClick={() => handleCall(selectedDonor)}
+                                                className="px-4 py-2 bg-nss-red text-white rounded-lg hover:bg-nss-red-dark font-semibold shadow-md flex items-center space-x-2"
+                                            >
+                                                <Phone className="w-4 h-4" />
+                                                <span>Call Donor</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -221,6 +221,22 @@ export async function updateLastDonationDate(id: string, date: Date): Promise<bo
     }
 }
 
+// Delete a blood donor
+export async function deleteBloodDonor(id: string): Promise<boolean> {
+    try {
+        const { error } = await supabase
+            .from('blood_donors')
+            .delete()
+            .eq('id', id)
+
+        if (error) throw error
+        return true
+    } catch (error) {
+        console.error('Error deleting blood donor:', error)
+        return false
+    }
+}
+
 // Subscribe to real-time blood donors changes
 export function subscribeToBloodDonors(callback: () => void): () => void {
     const channel = supabase
