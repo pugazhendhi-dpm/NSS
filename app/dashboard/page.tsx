@@ -128,33 +128,7 @@ export default function DashboardPage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Role</p>
-                                    <div className="flex items-center gap-2">
-                                        <Shield className="w-4 h-4 text-nss-blue" />
-                                        <p className="text-sm font-bold text-gray-900">{getRoleName(volunteer.role)}</p>
-                                    </div>
-                                </div>
 
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Department</p>
-                                    <p className="text-sm font-bold text-gray-900">{volunteer.department}</p>
-                                </div>
-
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Year</p>
-                                    <p className="text-sm font-bold text-gray-900">{volunteer.year}</p>
-                                </div>
-
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Phone</p>
-                                    <div className="flex items-center gap-2">
-                                        <Phone className="w-4 h-4 text-nss-blue" />
-                                        <p className="text-sm font-bold text-gray-900">{volunteer.phone}</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <button
