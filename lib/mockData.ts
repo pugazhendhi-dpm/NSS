@@ -20,7 +20,7 @@ export const mockVolunteers: Volunteer[] = [
     {
         id: '2',
         name: 'Super Senior',
-        email: 'supersenior@college.edu',
+        email: 'supersenior@kongu.edu',
         rollNumber: '2024ECE015',
         department: 'Electronics & Communication Engineering (ECE)',
         year: '3rd',

@@ -129,7 +129,7 @@ export default function LoginPage() {
                             <div className="bg-white p-2 rounded border border-blue-200">
                                 <p className="text-xs font-semibold text-blue-800 mb-1">⭐ Super Senior (Limited Access)</p>
                                 <p className="text-xs text-gray-700">
-                                    <code className="bg-blue-50 px-1.5 py-0.5 rounded text-blue-700">supersenior@college.edu</code>
+                                    <code className="bg-blue-50 px-1.5 py-0.5 rounded text-blue-700">supersenior@kongu.edu</code>
                                 </p>
                             </div>
 
