@@ -185,7 +185,7 @@ export default function AboutPage() {
                                         {volunteers.map((vol, idx) => (
                                             <div key={idx} className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-nss-blue hover:shadow-md transition-shadow">
                                                 <h4 className="font-bold text-gray-800 text-lg mb-1">{vol.name}</h4>
-                                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">Student Coordinator</p>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">Volunteer</p>
                                                 <div className="flex justify-between items-center pt-2 border-t border-gray-100">
                                                     <span className="bg-blue-50 text-nss-blue text-xs font-bold px-2.5 py-1 rounded-md border border-blue-100">{vol.dept}</span>
                                                     <a href={`tel:+91${vol.phone}`} className="text-sm font-semibold text-gray-600 hover:text-nss-red transition-colors">
