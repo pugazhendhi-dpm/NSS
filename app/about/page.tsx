@@ -1,7 +1,24 @@
-import { Target, Users, Flag, Award } from 'lucide-react'
+'use client'
+
+import { useState } from 'react'
+import { Target, Users, Flag, Award, ChevronDown, ChevronUp } from 'lucide-react'
 import Image from 'next/image'
 
+const volunteers = [
+    { name: "Sabari", dept: "ECE", phone: "9361358813" },
+    { name: "Kabil", dept: "EEE", phone: "9361090547" },
+    { name: "Manoj", dept: "EEE", phone: "8903026773" },
+    { name: "Hari Prasanna", dept: "EIE", phone: "8940374065" },
+    { name: "Santhosh", dept: "AIML", phone: "7502833715" },
+    { name: "Anushree", dept: "AIDS", phone: "7806823807" },
+    { name: "Ragavi", dept: "ECE", phone: "8220026334" },
+    { name: "Gowsika", dept: "EIE", phone: "9965051087" },
+    { name: "Gopika", dept: "EIE", phone: "9943870833" },
+    { name: "Priyanka", dept: "ECE", phone: "9342745330" },
+];
+
 export default function AboutPage() {
+    const [showVolunteers, setShowVolunteers] = useState(false)
     const milestones = [
         'To achieve greater heights of success in educating and uplifting the standard of society to a considerable extent around the area of Erode.',
         'To raise up for the best NSS team for social service',
@@ -151,6 +168,37 @@ export default function AboutPage() {
                                         </div>
                                         <h4 className="text-lg font-bold text-nss-red">Unit III (SFU)</h4>
                                         <p className="text-gray-700 font-semibold mt-2">Ms. K. Suvalakshmi</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Volunteers Accordion */}
+                            <div className="mt-12 border-t border-blue-300/50 pt-8">
+                                <div className="text-center">
+                                    <h3 className="text-2xl font-bold text-nss-blue mb-6">NSS Student Leaders & Volunteers</h3>
+                                    <button
+                                        onClick={() => setShowVolunteers(!showVolunteers)}
+                                        className={`inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 shadow-md hover:shadow-lg ${showVolunteers ? 'bg-gray-600 hover:bg-gray-700' : 'bg-nss-blue hover:bg-nss-blue-dark'}`}
+                                    >
+                                        <span>{showVolunteers ? 'Hide Volunteers' : `Show All Volunteers (+${volunteers.length})`}</span>
+                                        {showVolunteers ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                                    </button>
+                                </div>
+
+                                <div className={`transition-all duration-500 ease-in-out overflow-hidden ${showVolunteers ? 'max-h-[2000px] mt-8 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
+                                        {volunteers.map((vol, idx) => (
+                                            <div key={idx} className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-nss-blue hover:shadow-md transition-shadow">
+                                                <h4 className="font-bold text-gray-800 text-lg mb-1">{vol.name}</h4>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">Student Coordinator</p>
+                                                <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                                                    <span className="bg-blue-50 text-nss-blue text-xs font-bold px-2.5 py-1 rounded-md border border-blue-100">{vol.dept}</span>
+                                                    <a href={`tel:+91${vol.phone}`} className="text-sm font-semibold text-gray-600 hover:text-nss-red transition-colors">
+                                                        +91 {vol.phone}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
