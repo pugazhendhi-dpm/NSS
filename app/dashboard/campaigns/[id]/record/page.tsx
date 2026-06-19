@@ -34,9 +34,8 @@ export default function RecordDonationPage() {
 
             if (error) {
                 console.error('Error loading donors:', error)
-                alert('Error loading donors. Check console.')
+                alert('Error loading donors. Please try again.')
             } else {
-                console.log('Loaded donors:', data?.length)
                 // Map to DonorEligibility format
                 const mappedDonors: DonorEligibility[] = (data || []).map(d => ({
                     id: d.id,

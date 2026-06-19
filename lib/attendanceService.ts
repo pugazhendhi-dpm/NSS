@@ -55,8 +55,6 @@ export async function saveAttendanceRecords(
     markedById?: string
 ): Promise<boolean> {
     try {
-        console.log('Saving attendance records:', { activityName, activityDate, count: Object.keys(attendance).length })
-
         // Prepare attendance records
         const records = volunteers.map(volunteer => ({
             volunteer_id: volunteer.id,
@@ -80,7 +78,6 @@ export async function saveAttendanceRecords(
             throw error
         }
 
-        console.log('Successfully saved attendance records:', data?.length)
         return true
     } catch (error) {
         console.error('Error saving attendance records:', error)

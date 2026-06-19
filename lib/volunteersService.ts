@@ -57,8 +57,6 @@ export async function addVolunteer(volunteerData: {
             .single()
 
         if (error) {
-            console.error('Supabase error:', error)
-
             // Parse specific error messages
             if (error.code === '23505') { // Unique constraint violation
                 if (error.message.includes('volunteers_email_key')) {
@@ -129,22 +127,13 @@ export async function updateVolunteerStatus(
     status: 'pending' | 'approved' | 'rejected'
 ): Promise<boolean> {
     try {
-        console.log('Updating volunteer status:', { id, status })
-
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('volunteers')
             .update({ status })
             .eq('id', id)
-            .select()
 
-        console.log('Update result:', { data, error })
+        if (error) throw error
 
-        if (error) {
-            console.error('Supabase error:', error)
-            throw error
-        }
-
-        console.log('Successfully updated volunteer status')
         return true
     } catch (error) {
         console.error('Error updating volunteer status:', error)

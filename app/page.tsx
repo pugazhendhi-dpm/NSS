@@ -21,7 +21,7 @@ export default function HomePage() {
             <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-nss-blue/90 to-nss-blue/70 z-10" />
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=2000')] bg-cover bg-center" />
+                <div className="absolute inset-0 bg-[url('/images/nss-hands.jpg')] bg-cover bg-center" />
 
                 {/* Left Logo - Kongu Engineering College */}
                 <div className="absolute left-10 top-1/2 -translate-y-1/2 z-20 hidden lg:block animate-fade-in">

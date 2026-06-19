@@ -44,20 +44,15 @@ export default function ApprovalsPage() {
     }
 
     const handleApprove = async (id: string) => {
-        console.log('Approving volunteer with ID:', id)
         setProcessingId(id)
         const success = await approveVolunteer(id)
-        console.log('Approve result:', success)
 
         if (success) {
-            // Optimistically remove from pending list
             setPendingVolunteers(prev => prev.filter(v => v.id !== id))
             showSuccess('Volunteer approved successfully!')
-            // Reload to ensure data is in sync
             await loadPendingVolunteers()
         } else {
-            console.error('Failed to approve volunteer')
-            alert('Failed to approve volunteer. Please check the console for details.')
+            alert('Failed to approve volunteer. Please try again.')
         }
         setProcessingId(null)
     }
@@ -70,17 +65,13 @@ export default function ApprovalsPage() {
         console.log('Rejecting volunteer with ID:', id)
         setProcessingId(id)
         const success = await rejectVolunteer(id)
-        console.log('Reject result:', success)
 
         if (success) {
-            // Optimistically remove from pending list
             setPendingVolunteers(prev => prev.filter(v => v.id !== id))
             showSuccess('Volunteer enrollment rejected.')
-            // Reload to ensure data is in sync
             await loadPendingVolunteers()
         } else {
-            console.error('Failed to reject volunteer')
-            alert('Failed to reject volunteer. Please check the console for details.')
+            alert('Failed to reject volunteer. Please try again.')
         }
         setProcessingId(null)
     }

@@ -32,8 +32,6 @@ export default function JoinPage() {
         setError('')
 
         try {
-            console.log('Submitting enrollment:', formData)
-
             // Save to Supabase
             const result = await addVolunteer({
                 name: formData.name,
@@ -46,12 +44,9 @@ export default function JoinPage() {
                 skills: formData.skills,
             })
 
-            console.log('Enrollment result:', result)
-
             if (result) {
                 setSubmitted(true)
             } else {
-                console.error('Enrollment failed - addVolunteer returned null')
                 setError('Failed to submit enrollment. Please try again or contact NSS volunteers.')
             }
         } catch (err) {
