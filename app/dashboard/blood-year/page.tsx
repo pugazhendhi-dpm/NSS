@@ -41,7 +41,7 @@ export default function BloodDonationYearPage() {
         if (!volunteerData) { router.push('/login'); return }
         const vol = JSON.parse(volunteerData)
         setVolunteer(vol)
-        if (!hasPermission(vol.role, 'VIEW_CAMPAIGNS')) { router.push('/dashboard'); return }
+        if (!hasPermission(vol.role, 'ACCESS_BLOOD_DONORS')) { router.push('/dashboard'); return }
         loadRecords()
     }, [router])
 
@@ -127,7 +127,7 @@ export default function BloodDonationYearPage() {
         </div>
     )
 
-    const canManage = hasPermission(volunteer?.role, 'MANAGE_CAMPAIGNS')
+    const canManage = hasPermission(volunteer?.role, 'EDIT_STATISTICS')
 
     return (
         <div className="min-h-screen bg-gray-50">

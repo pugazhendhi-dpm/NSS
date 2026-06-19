@@ -355,7 +355,7 @@ export default function DashboardPage() {
                     )}
 
                     {/* Blood Donation Records - Admin & Supersenior */}
-                    {hasPermission(volunteer.role, 'VIEW_CAMPAIGNS') && (
+                    {hasPermission(volunteer.role, 'ACCESS_BLOOD_DONORS') && (
                         <div className="bg-white rounded-lg shadow-lg p-8 border-l-4 border-red-500">
                             <h2 className="text-2xl font-bold text-nss-blue mb-4">Blood Donation Records</h2>
                             <p className="text-gray-600 mb-6">
