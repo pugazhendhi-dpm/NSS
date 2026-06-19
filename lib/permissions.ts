@@ -10,10 +10,6 @@ export const PERMISSIONS = {
     VIEW_ALL_VOLUNTEERS: ['admin', 'supersenior'],
     APPROVE_VOLUNTEERS: ['admin', 'supersenior'],
 
-    // Campaigns
-    VIEW_CAMPAIGNS: ['admin', 'supersenior'],
-    MANAGE_CAMPAIGNS: ['admin', 'supersenior'],
-
     // Blood Donors (accessible to admin and supersenior)
     ACCESS_BLOOD_DONORS: ['admin', 'supersenior'],
 
@@ -53,8 +49,6 @@ export function canAccessRoute(userRole: Volunteer['role'], route: string): bool
         'dashboard/attendance': 'VIEW_ALL_ATTENDANCE',
         'dashboard/volunteers': 'VIEW_ALL_VOLUNTEERS',
         'dashboard/volunteers/approve': 'APPROVE_VOLUNTEERS',
-        'dashboard/campaigns': 'VIEW_CAMPAIGNS',
-        'dashboard/campaigns/new': 'MANAGE_CAMPAIGNS',
         'dashboard/blood-donors': 'ACCESS_BLOOD_DONORS',
         'dashboard/activities': 'MANAGE_ACTIVITIES',
         'dashboard/gallery': 'MANAGE_GALLERY',
@@ -138,12 +132,6 @@ export function getAccessibleMenuItems(role: Volunteer['role']) {
             path: '/dashboard/volunteers',
             icon: 'Users',
             permission: 'VIEW_ALL_VOLUNTEERS' as PermissionKey,
-        },
-        {
-            name: 'Campaigns',
-            path: '/dashboard/campaigns',
-            icon: 'Megaphone',
-            permission: 'VIEW_CAMPAIGNS' as PermissionKey,
         },
         {
             name: 'Activities',
