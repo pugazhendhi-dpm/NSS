@@ -152,9 +152,10 @@ CREATE POLICY "Authenticated users can insert" ON blood_donors FOR INSERT WITH C
 CREATE POLICY "Authenticated users can update" ON blood_donors FOR UPDATE USING (true);
 CREATE POLICY "Authenticated users can delete" ON blood_donors FOR DELETE USING (true);
 
--- Volunteers: public can insert (registration), authenticated can read
+-- Volunteers: public can insert (registration), authenticated can read and update (for approvals)
 CREATE POLICY "Public can register" ON volunteers FOR INSERT WITH CHECK (true);
 CREATE POLICY "Authenticated users can read" ON volunteers FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can update" ON volunteers FOR UPDATE USING (true);
 
 -- ============================================
 -- STORAGE BUCKET FOR IMAGES
