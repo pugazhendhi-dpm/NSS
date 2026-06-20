@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 export interface AuthUser {
     name: string
     email: string
-    role: 'admin' | 'supersenior'
+    role: 'admin' | 'supersenior' | 'volunteer'
     dbId: string
     image?: string | null
 }
