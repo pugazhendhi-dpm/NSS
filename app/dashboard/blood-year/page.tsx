@@ -39,10 +39,10 @@ export default function BloodDonationYearPage() {
     const [editData, setEditData] = useState(emptyForm)
 
     useEffect(() => {
-        if (!volunteer) return
-        if (!hasPermission(volunteer.role, 'ACCESS_BLOOD_DONORS')) { router.push('/dashboard'); return }
+        if (!user) return
+        if (!hasPermission(user.role, 'ACCESS_BLOOD_DONORS')) { router.push('/dashboard'); return }
         loadRecords()
-    }, [volunteer, router])
+    }, [user?.email, user?.role, router])
 
     const loadRecords = async () => {
         setLoading(true)

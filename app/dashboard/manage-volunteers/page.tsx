@@ -27,16 +27,16 @@ export default function ManageVolunteersPage() {
     const [phone, setPhone] = useState('')
 
     useEffect(() => {
-        if (!volunteer) return
+        if (!user) return
         
         // Ensure only admin or supersenior can access
-        if (volunteer.role === 'volunteer') {
+        if (user.role === 'volunteer') {
             router.push('/dashboard')
             return
         }
         
         loadFeaturedVolunteers()
-    }, [volunteer, router])
+    }, [user?.email, user?.role, router])
 
     const loadFeaturedVolunteers = async () => {
         setLoading(true)

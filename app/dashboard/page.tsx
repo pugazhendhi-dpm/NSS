@@ -40,7 +40,7 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (user) loadStats()
-    }, [user])
+    }, [user?.email])
 
     const loadStats = async () => {
         try {
