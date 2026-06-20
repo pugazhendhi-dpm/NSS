@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { TrendingUp, Users, Clock, Droplet, Home, Save, RotateCcw } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { getStats, updateStats, ImpactStats } from '@/lib/statsService'
@@ -9,7 +10,8 @@ import { getBloodDonationYearRecords } from '@/lib/bloodDonationYearService'
 
 export default function StatisticsManagementPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [stats, setStats] = useState<ImpactStats | null>(null)
     const [formData, setFormData] = useState({
         volunteersEnrolled: 0,
@@ -20,13 +22,6 @@ export default function StatisticsManagementPage() {
     const [saved, setSaved] = useState(false)
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-        }
-
         // Load current stats (async)
         const loadStats = async () => {
             const currentStats = await getStats()
@@ -42,7 +37,7 @@ export default function StatisticsManagementPage() {
             })
         }
         loadStats()
-    }, [router])
+    }, [])
 
     const handleChange = (field: keyof typeof formData, value: string) => {
         const numValue = parseInt(value) || 0

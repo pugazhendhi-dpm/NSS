@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Plus, Edit2, Trash2, Save, X, Megaphone } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import {
@@ -15,7 +16,8 @@ import {
 
 export default function UpdatesManagementPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [updates, setUpdates] = useState<Update[]>([])
     const [isAdding, setIsAdding] = useState(false)
     const [editingId, setEditingId] = useState<string | null>(null)
@@ -23,13 +25,6 @@ export default function UpdatesManagementPage() {
     const [editText, setEditText] = useState('')
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-        }
-
         // Load initial updates (async)
         const loadUpdates = async () => {
             const data = await getUpdates()
@@ -44,7 +39,7 @@ export default function UpdatesManagementPage() {
         })
 
         return unsubscribe
-    }, [router])
+    }, [])
 
     const handleAddUpdate = async () => {
         if (!newUpdateText.trim() || !volunteer) return

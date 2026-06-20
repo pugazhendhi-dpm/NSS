@@ -2,26 +2,22 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { TrendingUp, Calendar, CheckCircle, XCircle, Clock, User, Search } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { getAllVolunteerStats, VolunteerAttendanceStats } from '@/lib/attendanceService'
 
 export default function VolunteerStatsPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [stats, setStats] = useState<VolunteerAttendanceStats[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-            loadStats()
-        }
-    }, [router])
+        loadStats()
+    }, [])
 
     const loadStats = async () => {
         setLoading(true)

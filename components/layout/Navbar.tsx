@@ -2,14 +2,15 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Menu, X, LogOut } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useSession, signOut } from 'next-auth/react'
 
 export default function Navbar() {
-    const router = useRouter()
+    const { data: session, status } = useSession()
     const [isOpen, setIsOpen] = useState(false)
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    const isLoggedIn = status === 'authenticated'
 
     const navLinks = [
         { href: '/', label: 'Home' },
@@ -20,32 +21,8 @@ export default function Navbar() {
         { href: '/register-donor', label: 'Register as Donor' },
     ]
 
-    useEffect(() => {
-        // Check if volunteer is logged in
-        const checkLoginStatus = () => {
-            const volunteerData = sessionStorage.getItem('volunteer')
-            setIsLoggedIn(!!volunteerData)
-        }
-
-        checkLoginStatus()
-
-        // Listen for storage changes (in case user logs in/out in another tab)
-        window.addEventListener('storage', checkLoginStatus)
-
-        // Listen for custom login state change event (same tab)
-        window.addEventListener('loginStateChanged', checkLoginStatus)
-
-        return () => {
-            window.removeEventListener('storage', checkLoginStatus)
-            window.removeEventListener('loginStateChanged', checkLoginStatus)
-        }
-    }, [])
-
     const handleLogout = () => {
-        sessionStorage.removeItem('volunteer')
-        setIsLoggedIn(false)
-        window.dispatchEvent(new Event('loginStateChanged'))
-        router.push('/')
+        signOut({ callbackUrl: '/' })
     }
 
     return (

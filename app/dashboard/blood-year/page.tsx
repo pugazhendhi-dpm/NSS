@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Droplet, Plus, Trash2, Pencil, Check, X, ChevronDown, ChevronUp, CalendarDays, Users, HeartPulse, FlaskConical } from 'lucide-react'
 import {
     BloodDonationYearRecord,
@@ -20,7 +21,8 @@ const emptyForm = { academicYear: '', eventName: '', donationDate: '', unitsDona
 
 export default function BloodDonationYearPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<any>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [yearSummaries, setYearSummaries] = useState<YearSummary[]>([])
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
@@ -37,13 +39,10 @@ export default function BloodDonationYearPage() {
     const [editData, setEditData] = useState(emptyForm)
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) { router.push('/login'); return }
-        const vol = JSON.parse(volunteerData)
-        setVolunteer(vol)
-        if (!hasPermission(vol.role, 'ACCESS_BLOOD_DONORS')) { router.push('/dashboard'); return }
+        if (!volunteer) return
+        if (!hasPermission(volunteer.role, 'ACCESS_BLOOD_DONORS')) { router.push('/dashboard'); return }
         loadRecords()
-    }, [router])
+    }, [volunteer, router])
 
     const loadRecords = async () => {
         setLoading(true)

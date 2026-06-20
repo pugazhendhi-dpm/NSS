@@ -4,17 +4,15 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Calendar, Image as ImageIcon, X } from 'lucide-react'
 import { getGalleryImages, subscribeToGallery, GalleryImage } from '@/lib/galleryService'
+import { useSession } from 'next-auth/react'
 
 export default function GalleryPage() {
     const [images, setImages] = useState<GalleryImage[]>([])
     const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null)
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const { status } = useSession()
+    const isLoggedIn = status === 'authenticated'
 
     useEffect(() => {
-        // Check login status
-        const volunteer = sessionStorage.getItem('volunteer')
-        setIsLoggedIn(!!volunteer)
-
         // Load gallery images (async)
         const loadImages = async () => {
             const data = await getGalleryImages()

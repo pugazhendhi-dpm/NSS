@@ -1,27 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { CheckCircle, XCircle, Clock, User, Mail, Phone, BookOpen, Calendar } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { getPendingVolunteers, approveVolunteer, rejectVolunteer, subscribeToVolunteers } from '@/lib/volunteersService'
+import { useAuth } from '@/lib/useAuth'
+import { useRouter } from 'next/navigation'
 
 export default function ApprovalsPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<any>(null)
+    const { user } = useAuth()
     const [pendingVolunteers, setPendingVolunteers] = useState<Volunteer[]>([])
     const [loading, setLoading] = useState(true)
     const [processingId, setProcessingId] = useState<string | null>(null)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-            loadPendingVolunteers()
-        }
+        loadPendingVolunteers()
 
         // Subscribe to real-time updates
         const unsubscribe = subscribeToVolunteers(() => {
@@ -29,7 +24,7 @@ export default function ApprovalsPage() {
         })
 
         return unsubscribe
-    }, [router])
+    }, [])
 
     const loadPendingVolunteers = async () => {
         setLoading(true)

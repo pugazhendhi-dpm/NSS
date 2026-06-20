@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Plus, Edit2, Trash2, Save, X, Calendar, MapPin, Users as UsersIcon } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import {
@@ -15,7 +16,8 @@ import {
 
 export default function ActivitiesManagementPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [activities, setActivities] = useState<Activity[]>([])
     const [isAdding, setIsAdding] = useState(false)
     const [editingId, setEditingId] = useState<string | null>(null)
@@ -31,13 +33,6 @@ export default function ActivitiesManagementPage() {
     })
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-        }
-
         // Load activities (async)
         const loadActivities = async () => {
             const data = await getActivities()

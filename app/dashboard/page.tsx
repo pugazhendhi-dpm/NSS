@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Users, Droplet, Phone, LogOut, UserCheck, Shield, Calendar, BarChart, Megaphone, Activity, Image, ClipboardCheck, BookOpen } from 'lucide-react'
-import { Volunteer } from '@/lib/types'
 import { supabase } from '@/lib/supabase/client'
 import FeedbackSection from '@/components/FeedbackSection'
 import { hasPermission, getRoleName, getRoleBadgeColor, PERMISSIONS } from '@/lib/permissions'
+import { useAuth } from '@/lib/useAuth'
+import { signOut } from 'next-auth/react'
 
 function PendingBadge() {
     const [count, setCount] = useState<number>(0)
@@ -30,7 +31,7 @@ function PendingBadge() {
 
 export default function DashboardPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
     const [stats, setStats] = useState({
         totalDonors: 0,
         availableNow: 0,
@@ -38,14 +39,8 @@ export default function DashboardPage() {
     })
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-            loadStats()
-        }
-    }, [router])
+        if (user) loadStats()
+    }, [user])
 
     const loadStats = async () => {
         try {
@@ -78,12 +73,10 @@ export default function DashboardPage() {
     }
 
     const handleLogout = () => {
-        sessionStorage.removeItem('volunteer')
-        window.dispatchEvent(new Event('loginStateChanged'))
-        router.push('/')
+        signOut({ callbackUrl: '/' })
     }
 
-    if (!volunteer) {
+    if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
@@ -93,6 +86,9 @@ export default function DashboardPage() {
             </div>
         )
     }
+
+    // Map auth user to the role format used by permissions
+    const volunteer = { name: user.name, email: user.email, role: user.role as any }
 
     return (
         <div className="min-h-screen bg-gray-50">

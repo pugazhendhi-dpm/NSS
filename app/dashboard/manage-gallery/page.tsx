@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Plus, Trash2, Upload, Image as ImageIcon, X } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import {
@@ -14,7 +15,8 @@ import {
 
 export default function GalleryManagementPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [images, setImages] = useState<GalleryImage[]>([])
     const [isAdding, setIsAdding] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -28,13 +30,6 @@ export default function GalleryManagementPage() {
     })
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-        }
-
         // Load gallery (async)
         const loadImages = async () => {
             const data = await getGalleryImages()

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Users, Calendar, CheckCircle, XCircle, Clock, UserCheck } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { getApprovedVolunteers } from '@/lib/volunteersService'
@@ -9,7 +10,8 @@ import { saveAttendanceRecords } from '@/lib/attendanceService'
 
 export default function AttendancePage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
     const [activityName, setActivityName] = useState('')
     const [volunteers, setVolunteers] = useState<Volunteer[]>([])
@@ -20,14 +22,8 @@ export default function AttendancePage() {
     const [searchQuery, setSearchQuery] = useState('')
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-            loadApprovedVolunteers()
-        }
-    }, [router])
+        loadApprovedVolunteers()
+    }, [])
 
     const loadApprovedVolunteers = async () => {
         // Fetch approved volunteers from database
@@ -139,7 +135,7 @@ export default function AttendancePage() {
         ? Math.round(((stats.present + stats.late) / stats.total) * 100)
         : 0
 
-    if (!volunteer) {
+    if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">

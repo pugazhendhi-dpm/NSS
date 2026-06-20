@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Plus, Trash2, Upload, Image as ImageIcon, X, GripVertical, Edit2, Save, XCircle } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { Reorder } from 'framer-motion'
@@ -17,7 +18,8 @@ import {
 
 export default function ManageSliderPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [events, setEvents] = useState<SliderEvent[]>([])
     const [isAdding, setIsAdding] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -34,13 +36,6 @@ export default function ManageSliderPage() {
     })
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-        }
-
         const loadEvents = async () => {
             const data = await getSliderEvents()
             setEvents(data)
@@ -53,7 +48,7 @@ export default function ManageSliderPage() {
         })
 
         return unsubscribe
-    }, [router])
+    }, [])
 
     const resetForm = () => {
         setFormData({

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Phone, Filter, Search, Droplet, Clock, User, Building2, AlertCircle, MapPin, Home, Download, Trash2 } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { EXTENDED_BLOOD_GROUPS } from '@/lib/constants'
@@ -39,7 +40,8 @@ interface DetailedDonor {
 
 export default function BloodDonorsPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [donors, setDonors] = useState<DetailedDonor[]>([])
     const [filteredDonors, setFilteredDonors] = useState<DetailedDonor[]>([])
     const [loading, setLoading] = useState(true)
@@ -60,13 +62,7 @@ export default function BloodDonorsPage() {
     const [showEmergencySearch, setShowEmergencySearch] = useState(false)
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-        } else {
-            setVolunteer(JSON.parse(volunteerData))
-            loadDonors()
-        }
+        loadDonors()
 
         // Subscribe to real-time updates
         const unsubscribe = subscribeToBloodDonors(() => {

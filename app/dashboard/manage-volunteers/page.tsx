@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/useAuth'
 import { Trash2, UserPlus, Users } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import { 
@@ -13,7 +14,8 @@ import {
 
 export default function ManageVolunteersPage() {
     const router = useRouter()
-    const [volunteer, setVolunteer] = useState<Volunteer | null>(null)
+    const { user } = useAuth()
+    const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [featuredVolunteers, setFeaturedVolunteers] = useState<FeaturedVolunteer[]>([])
     const [loading, setLoading] = useState(true)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -25,22 +27,16 @@ export default function ManageVolunteersPage() {
     const [phone, setPhone] = useState('')
 
     useEffect(() => {
-        const volunteerData = sessionStorage.getItem('volunteer')
-        if (!volunteerData) {
-            router.push('/login')
-            return
-        }
+        if (!volunteer) return
         
-        const parsed = JSON.parse(volunteerData)
         // Ensure only admin or supersenior can access
-        if (parsed.role === 'volunteer') {
+        if (volunteer.role === 'volunteer') {
             router.push('/dashboard')
             return
         }
         
-        setVolunteer(parsed)
         loadFeaturedVolunteers()
-    }, [router])
+    }, [volunteer, router])
 
     const loadFeaturedVolunteers = async () => {
         setLoading(true)
