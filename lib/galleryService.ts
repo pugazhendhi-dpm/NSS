@@ -1,34 +1,24 @@
-import { supabase } from './supabase/client'
-
-// Gallery image interface
 export interface GalleryImage {
     id: string
     title: string
     description: string
-    imageUrl: string
+    imagePath: string
     category: string
     uploadedAt: Date
     uploadedBy: string
+    fileSize?: number
+    mimeType?: string
 }
 
-// Get all gallery images from Supabase
 export async function getGalleryImages(): Promise<GalleryImage[]> {
     try {
-        const { data, error } = await supabase
-            .from('gallery')
-            .select('*')
-            .order('uploaded_at', { ascending: false })
-
-        if (error) throw error
-
-        return (data || []).map((image) => ({
-            id: image.id,
-            title: image.title,
-            description: image.description || '',
-            imageUrl: image.image_url,
-            category: image.category || '',
-            uploadedAt: new Date(image.uploaded_at),
-            uploadedBy: image.uploaded_by || 'Unknown',
+        const response = await fetch('/api/gallery')
+        if (!response.ok) throw new Error('Failed to fetch gallery')
+        
+        const data = await response.json()
+        return data.map((image: any) => ({
+            ...image,
+            uploadedAt: new Date(image.uploadedAt)
         }))
     } catch (error) {
         console.error('Error loading gallery:', error)
@@ -36,7 +26,6 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
     }
 }
 
-// Upload image to Supabase Storage and add to gallery
 export async function addGalleryImage(
     title: string,
     description: string,
@@ -45,48 +34,41 @@ export async function addGalleryImage(
     uploadedBy: string
 ): Promise<GalleryImage | null> {
     try {
-        // 1. Upload image to Supabase Storage
-        const fileExt = imageFile.name.split('.').pop()
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-        const filePath = `${fileName}`
+        // 1. Upload image to local server
+        const formData = new FormData()
+        formData.append('file', imageFile)
+        formData.append('folder', 'gallery')
 
-        const { error: uploadError } = await supabase.storage
-            .from('gallery-images')
-            .upload(filePath, imageFile, {
-                cacheControl: '3600',
-                upsert: false,
-            })
+        const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        })
 
-        if (uploadError) throw uploadError
+        if (!uploadResponse.ok) throw new Error('Failed to upload image file')
+        
+        const { imagePath, fileSize, mimeType } = await uploadResponse.json()
 
-        // 2. Get public URL for the uploaded image
-        const {
-            data: { publicUrl },
-        } = supabase.storage.from('gallery-images').getPublicUrl(filePath)
-
-        // 3. Add gallery entry to database
-        const { data, error } = await supabase
-            .from('gallery')
-            .insert({
+        // 2. Add gallery entry to database
+        const response = await fetch('/api/gallery', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 title,
                 description,
-                image_url: publicUrl,
+                imagePath,
+                fileSize,
+                mimeType,
                 category,
-                uploaded_by: uploadedBy,
+                uploadedBy
             })
-            .select()
-            .single()
+        })
 
-        if (error) throw error
-
+        if (!response.ok) throw new Error('Failed to add gallery entry')
+        
+        const data = await response.json()
         return {
-            id: data.id,
-            title: data.title,
-            description: data.description || '',
-            imageUrl: data.image_url,
-            category: data.category || '',
-            uploadedAt: new Date(data.uploaded_at),
-            uploadedBy: data.uploaded_by || 'Unknown',
+            ...data,
+            uploadedAt: new Date(data.uploadedAt)
         }
     } catch (error) {
         console.error('Error uploading image:', error)
@@ -94,47 +76,46 @@ export async function addGalleryImage(
     }
 }
 
-// Delete gallery image from Supabase
 export async function deleteGalleryImage(id: string): Promise<boolean> {
     try {
-        // 1. Get the image URL to extract file path
-        const { data: imageData } = await supabase.from('gallery').select('image_url').eq('id', id).single()
-
-        if (imageData?.image_url) {
-            // Extract file name from URL
-            const urlParts = imageData.image_url.split('/')
-            const fileName = urlParts[urlParts.length - 1]
-
-            // 2. Delete from storage
-            await supabase.storage.from('gallery-images').remove([fileName])
-        }
-
-        // 3. Delete from database
-        const { error } = await supabase.from('gallery').delete().eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/gallery/${id}`, {
+            method: 'DELETE'
+        })
+        return response.ok
     } catch (error) {
         console.error('Error deleting image:', error)
         return false
     }
 }
 
-// Subscribe to real-time gallery changes
-export function subscribeToGallery(callback: () => void): () => void {
-    const channel = supabase
-        .channel('gallery-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => {
-            callback()
+export async function updateGalleryImage(
+    id: string,
+    title: string,
+    description: string,
+    category: string
+): Promise<boolean> {
+    try {
+        const response = await fetch(`/api/gallery/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title,
+                description,
+                category
+            })
         })
-        .subscribe()
-
-    return () => {
-        supabase.removeChannel(channel)
+        return response.ok
+    } catch (error) {
+        console.error('Error updating image:', error)
+        return false
     }
 }
 
-// Compress image before upload (optional, for better performance)
+export function subscribeToGallery(callback: () => void): () => void {
+    console.warn('Real-time subscriptions are not supported with MySQL backend.')
+    return () => {}
+}
+
 export async function compressImage(file: File, maxWidth: number = 1200): Promise<File> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()

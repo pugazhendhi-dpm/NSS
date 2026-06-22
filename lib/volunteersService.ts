@@ -1,224 +1,94 @@
-import { supabase } from './supabase/client'
-import { Volunteer } from './types'
 import { Department, Year } from './constants'
 
-// Helper function to convert numeric year to Year type
-const convertYear = (year: number): Year => {
-    const yearMap: Record<number, Year> = {
-        1: '1st',
-        2: '2nd',
-        3: '3rd',
-        4: '4th',
-        5: '5th',
-    }
-    return yearMap[year] || '1st'
-}
-
-// Database row type (what comes from Supabase)
-interface VolunteerRow {
+export interface Volunteer {
     id: string
     name: string
     email: string
-    roll_number: string
-    department: string
-    year: number
-    phone: string
-    blood_group?: string
+    rollNumber: string
+    department: Department
+    year: Year
+    phone?: string
+    bloodGroup: string
+    skills?: string[]
     role: 'volunteer' | 'supersenior' | 'admin'
     status: 'pending' | 'approved' | 'rejected'
-    created_at: string
+    createdAt: Date
 }
 
-// Add a new volunteer enrollment
 export async function addVolunteer(volunteerData: {
     name: string
     email: string
     rollNumber: string
     department: string
     year: string
-    bloodGroup?: string
     phone: string
-    skills?: string
-}): Promise<Volunteer | null> {
+    bloodGroup: string
+    skills?: string[]
+}): Promise<{ success: boolean; data?: Volunteer; error?: string }> {
     try {
-        const { data, error } = await supabase
-            .from('volunteers')
-            .insert({
-                name: volunteerData.name,
-                email: volunteerData.email,
-                roll_number: volunteerData.rollNumber,
-                department: volunteerData.department,
-                year: parseInt(volunteerData.year),
-                phone: volunteerData.phone,
-                role: 'volunteer',
-                status: 'pending',
-            })
-            .select()
-            .single()
-
-        if (error) {
-            // Parse specific error messages
-            if (error.code === '23505') { // Unique constraint violation
-                if (error.message.includes('volunteers_email_key')) {
-                    throw new Error('This email address is already registered. Please use a different email or contact NSS if you need help.')
-                } else if (error.message.includes('volunteers_roll_number_key')) {
-                    throw new Error('This roll number is already registered. Please check your roll number or contact NSS if you need help.')
-                }
+        const response = await fetch('/api/volunteers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(volunteerData)
+        })
+        
+        const result = await response.json()
+        
+        if (!response.ok) {
+            return { success: false, error: result.error || 'Failed to submit application' }
+        }
+        
+        return { 
+            success: true, 
+            data: {
+                ...result,
+                createdAt: new Date(result.createdAt)
             }
-
-            throw error
         }
-
-        return {
-            id: data.id,
-            name: data.name,
-            email: data.email,
-            rollNumber: data.roll_number,
-            department: data.department as Department,
-            year: convertYear(data.year),
-            bloodGroup: data.blood_group || '',
-            phone: data.phone,
-            role: data.role,
-            createdAt: new Date(data.created_at),
-        }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error adding volunteer:', error)
-
-        // Re-throw if it's our custom error message
-        if (error instanceof Error && error.message.includes('already registered')) {
-            throw error
-        }
-
-        return null
+        return { success: false, error: error.message || 'An unexpected error occurred' }
     }
 }
 
-// Get all volunteers
-export async function getVolunteers(): Promise<Volunteer[]> {
+export async function getVolunteersByStatus(status: 'pending' | 'approved' | 'rejected'): Promise<Volunteer[]> {
     try {
-        const { data, error } = await supabase
-            .from('volunteers')
-            .select('*')
-            .order('created_at', { ascending: false })
-
-        if (error) throw error
-
-        return (data || []).map((volunteer) => ({
-            id: volunteer.id,
-            name: volunteer.name,
-            email: volunteer.email,
-            rollNumber: volunteer.roll_number,
-            department: volunteer.department as Department,
-            year: convertYear(volunteer.year),
-            bloodGroup: volunteer.blood_group || '',
-            phone: volunteer.phone,
-            role: volunteer.role,
-            createdAt: new Date(volunteer.created_at),
-        }))
+        const response = await fetch(`/api/volunteers?status=${status}`)
+        if (!response.ok) throw new Error('Failed to fetch volunteers')
+        
+        const data = await response.json()
+        return data.map((v: any) => ({
+            ...v,
+            department: v.department as Department,
+            year: v.year as Year,
+            createdAt: new Date(v.createdAt)
+        })) as Volunteer[]
     } catch (error) {
         console.error('Error loading volunteers:', error)
         return []
     }
 }
 
-// Update volunteer status
-export async function updateVolunteerStatus(
-    id: string,
-    status: 'pending' | 'approved' | 'rejected'
-): Promise<boolean> {
+export async function updateVolunteerStatus(id: string, status: 'approved' | 'rejected'): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('volunteers')
-            .update({ status })
-            .eq('id', id)
-
-        if (error) throw error
-
-        return true
+        const response = await fetch(`/api/volunteers/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        })
+        return response.ok
     } catch (error) {
         console.error('Error updating volunteer status:', error)
         return false
     }
 }
 
-// Get pending volunteers (awaiting approval)
-export async function getPendingVolunteers(): Promise<Volunteer[]> {
-    try {
-        const { data, error } = await supabase
-            .from('volunteers')
-            .select('*')
-            .eq('status', 'pending')
-            .order('created_at', { ascending: false })
-
-        if (error) throw error
-
-        return (data || []).map((volunteer) => ({
-            id: volunteer.id,
-            name: volunteer.name,
-            email: volunteer.email,
-            rollNumber: volunteer.roll_number,
-            department: volunteer.department as Department,
-            year: convertYear(volunteer.year),
-            bloodGroup: volunteer.blood_group || '',
-            phone: volunteer.phone,
-            role: volunteer.role,
-            createdAt: new Date(volunteer.created_at),
-        }))
-    } catch (error) {
-        console.error('Error loading pending volunteers:', error)
-        return []
-    }
-}
-
-// Get approved volunteers only
-export async function getApprovedVolunteers(): Promise<Volunteer[]> {
-    try {
-        const { data, error } = await supabase
-            .from('volunteers')
-            .select('*')
-            .eq('status', 'approved')
-            .order('name', { ascending: true })
-
-        if (error) throw error
-
-        return (data || []).map((volunteer) => ({
-            id: volunteer.id,
-            name: volunteer.name,
-            email: volunteer.email,
-            rollNumber: volunteer.roll_number,
-            department: volunteer.department as Department,
-            year: convertYear(volunteer.year),
-            bloodGroup: volunteer.blood_group || '',
-            phone: volunteer.phone,
-            role: volunteer.role,
-            createdAt: new Date(volunteer.created_at),
-        }))
-    } catch (error) {
-        console.error('Error loading approved volunteers:', error)
-        return []
-    }
-}
-
-// Approve a volunteer
-export async function approveVolunteer(id: string): Promise<boolean> {
-    return updateVolunteerStatus(id, 'approved')
-}
-
-// Reject a volunteer
-export async function rejectVolunteer(id: string): Promise<boolean> {
-    return updateVolunteerStatus(id, 'rejected')
-}
-
-// Subscribe to real-time volunteer changes
 export function subscribeToVolunteers(callback: () => void): () => void {
-    const channel = supabase
-        .channel('volunteers-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'volunteers' }, () => {
-            callback()
-        })
-        .subscribe()
-
-    return () => {
-        supabase.removeChannel(channel)
-    }
+    console.warn('Real-time subscriptions are not supported with MySQL backend.')
+    return () => {}
 }
+
+export const getApprovedVolunteers = () => getVolunteersByStatus('approved')
+export const getPendingVolunteers = () => getVolunteersByStatus('pending')
+export const approveVolunteer = (id: string) => updateVolunteerStatus(id, 'approved')
+export const rejectVolunteer = (id: string) => updateVolunteerStatus(id, 'rejected')

@@ -27,14 +27,31 @@ export default function StatisticsManagementPage() {
             const currentStats = await getStats()
             const records = await getBloodDonationYearRecords()
             const totalBloodUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
-            
-            setStats({ ...currentStats, bloodUnitsDonated: totalBloodUnits })
-            setFormData({
-                volunteersEnrolled: currentStats.volunteersEnrolled,
-                hoursOfService: currentStats.hoursOfService,
-                bloodUnitsDonated: totalBloodUnits,
-                villagesAdopted: currentStats.villagesAdopted,
-            })
+            if (currentStats) {
+                setStats({ ...currentStats, bloodUnitsDonated: totalBloodUnits })
+                setFormData({
+                    volunteersEnrolled: currentStats.volunteersEnrolled,
+                    hoursOfService: currentStats.hoursOfService,
+                    bloodUnitsDonated: totalBloodUnits,
+                    villagesAdopted: currentStats.villagesAdopted,
+                })
+            } else {
+                setStats({
+                    id: 'new',
+                    volunteersEnrolled: 0,
+                    hoursOfService: 0,
+                    bloodUnitsDonated: totalBloodUnits,
+                    villagesAdopted: 0,
+                    lastUpdated: new Date(),
+                    lastUpdatedBy: 'System'
+                })
+                setFormData({
+                    volunteersEnrolled: 0,
+                    hoursOfService: 0,
+                    bloodUnitsDonated: totalBloodUnits,
+                    villagesAdopted: 0,
+                })
+            }
         }
         loadStats()
     }, [])

@@ -1,5 +1,3 @@
-import { supabase } from './supabase/client'
-
 export interface FeaturedVolunteer {
     id: string
     name: string
@@ -10,20 +8,10 @@ export interface FeaturedVolunteer {
 
 export async function getFeaturedVolunteers(): Promise<FeaturedVolunteer[]> {
     try {
-        const { data, error } = await supabase
-            .from('featured_volunteers')
-            .select('*')
-            .order('created_at', { ascending: true })
-
-        if (error) throw error
-
-        return (data || []).map(v => ({
-            id: v.id,
-            name: v.name,
-            department: v.department,
-            phone: v.phone,
-            createdAt: v.created_at,
-        }))
+        const response = await fetch('/api/featured-volunteers')
+        if (!response.ok) throw new Error('Failed to fetch featured volunteers')
+        
+        return await response.json()
     } catch (error) {
         console.error('Error fetching featured volunteers:', error)
         return []
@@ -32,16 +20,12 @@ export async function getFeaturedVolunteers(): Promise<FeaturedVolunteer[]> {
 
 export async function addFeaturedVolunteer(volunteer: Omit<FeaturedVolunteer, 'id' | 'createdAt'>): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('featured_volunteers')
-            .insert({
-                name: volunteer.name,
-                department: volunteer.department,
-                phone: volunteer.phone,
-            })
-
-        if (error) throw error
-        return true
+        const response = await fetch('/api/featured-volunteers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(volunteer)
+        })
+        return response.ok
     } catch (error) {
         console.error('Error adding featured volunteer:', error)
         return false
@@ -50,13 +34,10 @@ export async function addFeaturedVolunteer(volunteer: Omit<FeaturedVolunteer, 'i
 
 export async function deleteFeaturedVolunteer(id: string): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('featured_volunteers')
-            .delete()
-            .eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/featured-volunteers/${id}`, {
+            method: 'DELETE'
+        })
+        return response.ok
     } catch (error) {
         console.error('Error deleting featured volunteer:', error)
         return false

@@ -119,7 +119,7 @@ export default function ManageSliderPage() {
 
     const startEditing = (event: SliderEvent) => {
         setEditingId(event.id)
-        setEditFormData({ title: event.title, subtitle: event.subtitle })
+        setEditFormData({ title: event.title, subtitle: event.subtitle || '' })
     }
 
     const cancelEditing = () => {
@@ -296,7 +296,7 @@ export default function ManageSliderPage() {
 
                             <div className="w-full md:w-64 h-40 relative bg-gray-200 shrink-0">
                                 <img
-                                    src={event.imageUrl}
+                                    src={event.imagePath}
                                     alt={event.title}
                                     className="w-full h-full object-cover"
                                 />

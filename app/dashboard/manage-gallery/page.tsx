@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
-import { Plus, Trash2, Upload, Image as ImageIcon, X } from 'lucide-react'
+import { Plus, Trash2, Upload, Image as ImageIcon, X, Edit2, Save } from 'lucide-react'
 import { Volunteer } from '@/lib/types'
 import {
     getGalleryImages,
     addGalleryImage,
+    updateGalleryImage,
     deleteGalleryImage,
     subscribeToGallery,
     GalleryImage,
@@ -19,6 +20,7 @@ export default function GalleryManagementPage() {
     const volunteer = user ? { id: user.dbId, name: user.name, email: user.email, role: user.role } as any : null
     const [images, setImages] = useState<GalleryImage[]>([])
     const [isAdding, setIsAdding] = useState(false)
+    const [editingId, setEditingId] = useState<string | null>(null)
     const [uploading, setUploading] = useState(false)
 
     const [formData, setFormData] = useState({
@@ -84,7 +86,6 @@ export default function GalleryManagementPage() {
 
         setUploading(true)
         try {
-            // Upload image to Supabase Storage
             const result = await addGalleryImage(
                 formData.title,
                 formData.description,
@@ -103,6 +104,46 @@ export default function GalleryManagementPage() {
         } catch (error) {
             console.error('Error uploading image:', error)
             alert('Failed to upload image. Please try a smaller file.')
+        } finally {
+            setUploading(false)
+        }
+    }
+
+    const startEdit = (image: GalleryImage) => {
+        setEditingId(image.id)
+        setFormData({
+            title: image.title,
+            description: image.description || '',
+            category: image.category || '',
+            imageFile: null,
+            imagePreview: image.imagePath,
+        })
+        setIsAdding(true)
+    }
+
+    const handleEdit = async () => {
+        if (!editingId || !formData.title) return
+
+        setUploading(true)
+        try {
+            const success = await updateGalleryImage(
+                editingId,
+                formData.title,
+                formData.description,
+                formData.category
+            )
+
+            if (success) {
+                resetForm()
+                setIsAdding(false)
+                setEditingId(null)
+                alert('Photo updated successfully!')
+            } else {
+                alert('Failed to update image. Please try again.')
+            }
+        } catch (error) {
+            console.error('Error updating image:', error)
+            alert('Failed to update image.')
         } finally {
             setUploading(false)
         }
@@ -149,7 +190,11 @@ export default function GalleryManagementPage() {
                 {/* Upload Section */}
                 {!isAdding ? (
                     <button
-                        onClick={() => setIsAdding(true)}
+                        onClick={() => {
+                            resetForm()
+                            setEditingId(null)
+                            setIsAdding(true)
+                        }}
                         className="btn-primary mb-6 flex items-center space-x-2"
                     >
                         <Plus className="w-5 h-5" />
@@ -157,13 +202,15 @@ export default function GalleryManagementPage() {
                     </button>
                 ) : (
                     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <h3 className="font-semibold text-nss-blue mb-4">Upload New Photo</h3>
+                        <h3 className="font-semibold text-nss-blue mb-4">
+                            {editingId ? 'Edit Photo Details' : 'Upload New Photo'}
+                        </h3>
 
                         <div className="space-y-4">
-                            {/* Image Upload */}
+                            {/* Image Upload / Preview */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Select Image (Max 5MB)
+                                    {editingId ? 'Image Preview' : 'Select Image (Max 5MB)'}
                                 </label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                                     {formData.imagePreview ? (
@@ -173,14 +220,16 @@ export default function GalleryManagementPage() {
                                                 alt="Preview"
                                                 className="max-h-64 mx-auto rounded-lg"
                                             />
-                                            <button
-                                                onClick={() =>
-                                                    setFormData({ ...formData, imageFile: null, imagePreview: '' })
-                                                }
-                                                className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
+                                            {!editingId && (
+                                                <button
+                                                    onClick={() =>
+                                                        setFormData({ ...formData, imageFile: null, imagePreview: '' })
+                                                    }
+                                                    className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            )}
                                         </div>
                                     ) : (
                                         <div>
@@ -246,18 +295,19 @@ export default function GalleryManagementPage() {
                                     onClick={() => {
                                         resetForm()
                                         setIsAdding(false)
+                                        setEditingId(null)
                                     }}
                                     className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={handleUpload}
-                                    disabled={!formData.title || !formData.imageFile || uploading}
+                                    onClick={editingId ? handleEdit : handleUpload}
+                                    disabled={!formData.title || (!editingId && !formData.imageFile) || uploading}
                                     className="btn-primary flex items-center space-x-2 disabled:opacity-50"
                                 >
-                                    <Upload className="w-4 h-4" />
-                                    <span>{uploading ? 'Uploading...' : 'Upload Photo'}</span>
+                                    {editingId ? <Save className="w-4 h-4" /> : <Upload className="w-4 h-4" />}
+                                    <span>{uploading ? 'Saving...' : editingId ? 'Save Changes' : 'Upload Photo'}</span>
                                 </button>
                             </div>
                         </div>
@@ -273,11 +323,17 @@ export default function GalleryManagementPage() {
                         >
                             <div className="aspect-square relative overflow-hidden">
                                 <img
-                                    src={image.imageUrl}
+                                    src={image.imagePath}
                                     alt={image.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                 />
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-center justify-center">
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-center justify-center space-x-3">
+                                    <button
+                                        onClick={() => startEdit(image)}
+                                        className="opacity-0 group-hover:opacity-100 bg-white text-nss-blue p-3 rounded-full hover:bg-gray-100 transition-all"
+                                    >
+                                        <Edit2 className="w-5 h-5" />
+                                    </button>
                                     <button
                                         onClick={() => handleDelete(image.id)}
                                         className="opacity-0 group-hover:opacity-100 bg-red-500 text-white p-3 rounded-full hover:bg-red-600 transition-all"

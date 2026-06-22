@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { MapPin, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import { geocodeAddress } from '@/lib/geocoding'
-import { supabase } from '@/lib/supabase/client'
 
 interface GeocodingResult {
     id: string
@@ -28,12 +27,10 @@ export default function GeocodeDonorsPage() {
 
         try {
             // Fetch all donors without coordinates
-            const { data: donors, error } = await supabase
-                .from('blood_donors')
-                .select('id, name, district, hometown, address, latitude, longitude')
-                .or('latitude.is.null,longitude.is.null')
-
-            if (error) throw error
+            const response = await fetch('/api/blood-donors')
+            if (!response.ok) throw new Error('Failed to fetch donors')
+            const allDonors = await response.json()
+            const donors = allDonors.filter((d: any) => d.latitude == null || d.longitude == null)
 
             if (!donors || donors.length === 0) {
                 alert('All donors already have geolocation data!')
@@ -72,17 +69,18 @@ export default function GeocodeDonorsPage() {
 
                     if (coords) {
                         // Update donor in database
-                        const { error: updateError } = await supabase
-                            .from('blood_donors')
-                            .update({
+                        const updateResponse = await fetch(`/api/blood-donors/${donor.id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
                                 latitude: coords.lat,
                                 longitude: coords.lon
                             })
-                            .eq('id', donor.id)
+                        })
 
-                        if (updateError) {
+                        if (!updateResponse.ok) {
                             result.status = 'failed'
-                            result.error = updateError.message
+                            result.error = 'Failed to update database'
                         } else {
                             result.status = 'success'
                             result.latitude = coords.lat

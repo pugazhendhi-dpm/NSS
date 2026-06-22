@@ -68,17 +68,17 @@ export default function GalleryPage() {
                                     onClick={() => openLightbox(image)}
                                 >
                                     <div className="relative h-80">
-                                        {image.imageUrl.startsWith('data:') ? (
+                                        {image.imagePath.startsWith('data:') ? (
                                             // For base64 images
                                             <img
-                                                src={image.imageUrl}
+                                                src={image.imagePath}
                                                 alt={image.title}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             />
                                         ) : (
                                             // For external URLs
                                             <Image
-                                                src={image.imageUrl}
+                                                src={image.imagePath}
                                                 alt={image.title}
                                                 fill
                                                 className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -128,19 +128,21 @@ export default function GalleryPage() {
                     >
                         {/* Image */}
                         <div className="relative w-full flex-1 flex items-center justify-center mb-4">
-                            {selectedImage.imageUrl.startsWith('data:') ? (
+                            {selectedImage.imagePath.startsWith('data:') ? (
                                 <img
-                                    src={selectedImage.imageUrl}
+                                    src={selectedImage.imagePath}
                                     alt={selectedImage.title}
                                     className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-2xl"
                                 />
                             ) : (
                                 <div className="relative w-full h-[70vh]">
                                     <Image
-                                        src={selectedImage.imageUrl}
+                                        src={selectedImage.imagePath}
                                         alt={selectedImage.title}
                                         fill
-                                        className="object-contain"
+                                        className="object-contain drop-shadow-2xl"
+                                        sizes="90vw"
+                                        unoptimized
                                     />
                                 </div>
                             )}

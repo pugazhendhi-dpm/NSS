@@ -9,6 +9,7 @@ export default function EventSlider() {
     const [sliderEvents, setSliderEvents] = useState<SliderEvent[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [loading, setLoading] = useState(true)
+    const [zoomedImage, setZoomedImage] = useState<string | null>(null)
 
     useEffect(() => {
         const loadEvents = async () => {
@@ -87,16 +88,21 @@ export default function EventSlider() {
                         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                     >
                         {sliderEvents.map((event) => (
-                            <div key={event.id} className="min-w-full h-full relative">
+                            <div 
+                                key={event.id} 
+                                className="min-w-full h-full relative cursor-pointer"
+                                onClick={() => setZoomedImage(event.imagePath)}
+                            >
                                 <Image
-                                    src={event.imageUrl}
+                                    src={event.imagePath}
                                     alt={event.title}
                                     fill
                                     loading="lazy"
-                                    className="object-cover"
+                                    quality={100}
+                                    className="object-cover transition-transform duration-300 hover:scale-105"
                                 />
                                 {/* Dark Gradient Overlay */}
-                                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 65%)' }} />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 65%)' }} />
                                 
                                 {/* Text Content */}
                                 <div className="absolute bottom-0 left-0 right-0 p-8 md:p-14 text-white">
@@ -146,6 +152,33 @@ export default function EventSlider() {
                     )}
                 </div>
             </div>
+
+            {/* Zoom Modal */}
+            {zoomedImage && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+                    onClick={() => setZoomedImage(null)}
+                >
+                    <button 
+                        className="absolute top-6 right-6 text-white hover:text-nss-red transition-colors"
+                        onClick={() => setZoomedImage(null)}
+                        aria-label="Close zoomed image"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <div className="relative w-full max-w-6xl max-h-[90vh] aspect-video">
+                        <Image
+                            src={zoomedImage}
+                            alt="Zoomed Event Image"
+                            fill
+                            quality={100}
+                            className="object-contain rounded-lg"
+                        />
+                    </div>
+                </div>
+            )}
         </section>
     )
 }

@@ -2,7 +2,8 @@
 const nextConfig = {
     images: {
         domains: [
-            'rqvunxmsbtpavhlsckux.supabase.co', // Supabase storage
+            'nss.kongu.edu',
+            'localhost',
         ],
     },
 }

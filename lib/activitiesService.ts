@@ -1,11 +1,9 @@
-import { supabase } from './supabase/client'
-
 // Activity interface
 export interface Activity {
     id: string
     title: string
     description: string
-    category: 'Regular Activities' | 'Special Camps'
+    category: 'Sustainable Initiatives' | 'Special Camps'
     date: Date
     location: string
     participants: number
@@ -15,29 +13,17 @@ export interface Activity {
     createdBy: string
 }
 
-// Get all activities from Supabase
+// Get all activities
 export async function getActivities(): Promise<Activity[]> {
     try {
-        const { data, error } = await supabase
-            .from('activities')
-            .select('*')
-            .order('date', { ascending: false })
-
-        if (error) throw error
-
-        // Transform database format to app format
-        return (data || []).map((activity) => ({
-            id: activity.id,
-            title: activity.title,
-            description: activity.description || '',
-            category: activity.category,
+        const response = await fetch('/api/activities')
+        if (!response.ok) throw new Error('Failed to fetch activities')
+        
+        const data = await response.json()
+        return data.map((activity: any) => ({
+            ...activity,
             date: new Date(activity.date),
-            location: activity.location || '',
-            participants: activity.participants,
-            imageUrl: activity.image_url || undefined,
-            documentUrl: activity.document_url || undefined,
-            createdAt: new Date(activity.created_at),
-            createdBy: activity.created_by || 'Unknown',
+            createdAt: new Date(activity.createdAt)
         }))
     } catch (error) {
         console.error('Error loading activities:', error)
@@ -45,11 +31,11 @@ export async function getActivities(): Promise<Activity[]> {
     }
 }
 
-// Add activity to Supabase
+// Add activity
 export async function addActivity(
     title: string,
     description: string,
-    category: 'Regular Activities' | 'Special Camps',
+    category: 'Sustainable Initiatives' | 'Special Camps',
     date: Date,
     location: string,
     participants: number,
@@ -58,36 +44,29 @@ export async function addActivity(
     createdBy: string
 ): Promise<Activity | null> {
     try {
-        const { data, error } = await supabase
-            .from('activities')
-            .insert({
+        const response = await fetch('/api/activities', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 title,
                 description,
                 category,
-                date: date.toISOString().split('T')[0], // Format as YYYY-MM-DD
+                date: date.toISOString(),
                 location,
                 participants,
-                image_url: imageUrl,
-                document_url: documentUrl,
-                created_by: createdBy,
+                imageUrl,
+                documentUrl,
+                createdBy
             })
-            .select()
-            .single()
-
-        if (error) throw error
-
+        })
+        
+        if (!response.ok) throw new Error('Failed to add activity')
+        
+        const data = await response.json()
         return {
-            id: data.id,
-            title: data.title,
-            description: data.description || '',
-            category: data.category,
+            ...data,
             date: new Date(data.date),
-            location: data.location || '',
-            participants: data.participants,
-            imageUrl: data.image_url || undefined,
-            documentUrl: data.document_url || undefined,
-            createdAt: new Date(data.created_at),
-            createdBy: data.created_by || 'Unknown',
+            createdAt: new Date(data.createdAt)
         }
     } catch (error) {
         console.error('Error adding activity:', error)
@@ -95,12 +74,12 @@ export async function addActivity(
     }
 }
 
-// Update activity in Supabase
+// Update activity
 export async function updateActivity(
     id: string,
     title: string,
     description: string,
-    category: 'Regular Activities' | 'Special Camps',
+    category: 'Sustainable Initiatives' | 'Special Camps',
     date: Date,
     location: string,
     participants: number,
@@ -108,51 +87,45 @@ export async function updateActivity(
     documentUrl: string | undefined
 ): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('activities')
-            .update({
+        const response = await fetch(`/api/activities/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 title,
                 description,
                 category,
-                date: date.toISOString().split('T')[0],
+                date: date.toISOString(),
                 location,
                 participants,
-                image_url: imageUrl,
-                document_url: documentUrl,
+                imageUrl,
+                documentUrl
             })
-            .eq('id', id)
-
-        if (error) throw error
-        return true
+        })
+        
+        return response.ok
     } catch (error) {
         console.error('Error updating activity:', error)
         return false
     }
 }
 
-// Delete activity from Supabase
+// Delete activity
 export async function deleteActivity(id: string): Promise<boolean> {
     try {
-        const { error } = await supabase.from('activities').delete().eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/activities/${id}`, {
+            method: 'DELETE'
+        })
+        return response.ok
     } catch (error) {
         console.error('Error deleting activity:', error)
         return false
     }
 }
 
-// Subscribe to real-time activities changes
+// Subscriptions are no longer supported directly via the API
+// Components should use SWR or React Query for polling, or refresh manually
 export function subscribeToActivities(callback: () => void): () => void {
-    const channel = supabase
-        .channel('activities-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'activities' }, () => {
-            callback()
-        })
-        .subscribe()
-
-    return () => {
-        supabase.removeChannel(channel)
-    }
+    console.warn('Real-time subscriptions are not supported with MySQL backend. Polling may be required.')
+    // Return a dummy unsubscribe function
+    return () => {}
 }

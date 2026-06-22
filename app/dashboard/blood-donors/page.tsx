@@ -23,6 +23,7 @@ interface DetailedDonor {
     alternatePhone?: string
     email?: string
     department: string
+    batch: string
     year: string
     section: string
     residentialStatus: string
@@ -51,7 +52,12 @@ export default function BloodDonorsPage() {
     const [bloodGroupFilter, setBloodGroupFilter] = useState<string>('all')
     const [departmentFilter, setDepartmentFilter] = useState<string>('all')
     const [yearFilter, setYearFilter] = useState<string>('all')
+    const [batchFilter, setBatchFilter] = useState<string>('all')
     const [statusFilter, setStatusFilter] = useState<'all' | 'ready' | 'called' | 'donated'>('all')
+
+    // Settings
+    const [activeBatch, setActiveBatch] = useState<string>('')
+    const [savingSettings, setSavingSettings] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
 
     // Pagination
@@ -63,6 +69,7 @@ export default function BloodDonorsPage() {
 
     useEffect(() => {
         loadDonors()
+        loadSettings()
 
         // Subscribe to real-time updates
         const unsubscribe = subscribeToBloodDonors(() => {
@@ -71,6 +78,41 @@ export default function BloodDonorsPage() {
 
         return unsubscribe
     }, [router])
+
+    const loadSettings = async () => {
+        try {
+            const res = await fetch('/api/settings')
+            if (res.ok) {
+                const data = await res.json()
+                if (data.activeDonorBatch) {
+                    setActiveBatch(data.activeDonorBatch)
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load settings:', error)
+        }
+    }
+
+    const saveSettings = async () => {
+        setSavingSettings(true)
+        try {
+            const res = await fetch('/api/settings', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ activeDonorBatch: activeBatch })
+            })
+            if (res.ok) {
+                alert('Active batch updated successfully!')
+            } else {
+                alert('Failed to update settings')
+            }
+        } catch (error) {
+            console.error('Failed to save settings:', error)
+            alert('An error occurred while saving')
+        } finally {
+            setSavingSettings(false)
+        }
+    }
 
     const loadDonors = async () => {
         setLoading(true)
@@ -88,6 +130,7 @@ export default function BloodDonorsPage() {
             alternatePhone: donor.alternatePhone,
             email: donor.email,
             department: donor.department || 'N/A',
+            batch: donor.batch || 'N/A',
             year: donor.year || 'N/A',
             section: donor.section || 'N/A',
             residentialStatus: donor.residentialStatus || 'N/A',
@@ -127,6 +170,11 @@ export default function BloodDonorsPage() {
             filtered = filtered.filter((d) => d.year === yearFilter)
         }
 
+        // Batch filter
+        if (batchFilter !== 'all') {
+            filtered = filtered.filter((d) => d.batch === batchFilter)
+        }
+
         // Status filter
         if (statusFilter !== 'all') {
             filtered = filtered.filter((d) => {
@@ -145,7 +193,7 @@ export default function BloodDonorsPage() {
 
         setFilteredDonors(filtered)
         setCurrentPage(1) // Reset to first page when filters change
-    }, [bloodGroupFilter, departmentFilter, yearFilter, statusFilter, searchQuery, donors])
+    }, [bloodGroupFilter, departmentFilter, yearFilter, batchFilter, statusFilter, searchQuery, donors])
 
     // Calculate pagination
     const totalPages = Math.ceil(filteredDonors.length / itemsPerPage)
@@ -181,6 +229,7 @@ export default function BloodDonorsPage() {
             'Alternate Phone': d.alternatePhone || '',
             'Email': d.email || '',
             'Department': d.department,
+            'Batch': d.batch,
             'Year': d.year,
             'Section': d.section,
             'Residential Status': d.residentialStatus,
@@ -213,6 +262,7 @@ export default function BloodDonorsPage() {
 
     const departments = Array.from(new Set(donors.map((d) => d.department)))
     const years = Array.from(new Set(donors.map((d) => d.year)))
+    const batches = Array.from(new Set(donors.map((d) => d.batch))).filter(b => b && b !== 'N/A')
 
     if (loading) {
         return (
@@ -262,6 +312,33 @@ export default function BloodDonorsPage() {
                         >
                             <Download className="w-6 h-6" />
                             <span className="text-lg">📊 Export to Excel</span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Global Settings */}
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-l-4 border-nss-red">
+                    <h2 className="text-lg font-semibold text-gray-800 mb-2">Registration Settings</h2>
+                    <p className="text-sm text-gray-600 mb-4">
+                        Set the default "Batch" (e.g., 2025-2029) that will be pre-filled on the Blood Donor Registration Form.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-end gap-4">
+                        <div className="flex-1 max-w-sm">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Active Registration Batch</label>
+                            <input
+                                type="text"
+                                value={activeBatch}
+                                onChange={(e) => setActiveBatch(e.target.value)}
+                                placeholder="e.g., 2025-2029"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nss-blue text-sm"
+                            />
+                        </div>
+                        <button
+                            onClick={saveSettings}
+                            disabled={savingSettings}
+                            className="bg-nss-blue hover:bg-nss-blue-dark text-white px-6 py-2 rounded-lg font-semibold text-sm transition-colors disabled:opacity-50"
+                        >
+                            {savingSettings ? 'Saving...' : 'Save Settings'}
                         </button>
                     </div>
                 </div>
@@ -325,6 +402,23 @@ export default function BloodDonorsPage() {
                             </select>
                         </div>
 
+                        {/* Batch Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Batch</label>
+                            <select
+                                value={batchFilter}
+                                onChange={(e) => setBatchFilter(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nss-blue text-sm"
+                            >
+                                <option value="all">All Batches</option>
+                                {batches.map((batch) => (
+                                    <option key={batch} value={batch}>
+                                        {batch}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
                         {/* Status Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Availability</label>
@@ -379,7 +473,7 @@ export default function BloodDonorsPage() {
                             <thead className="bg-nss-blue text-white">
                                 <tr>
                                     <th className="px-4 py-3 text-left text-xs font-semibold">Name & Roll No</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold">Dept/Year</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold">Dept/Batch</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold">Blood Group</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold">Contact</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold">Hostel/Day</th>
@@ -414,6 +508,7 @@ export default function BloodDonorsPage() {
                                                 <div className="text-xs">
                                                     <p className="font-medium text-gray-700 truncate" title={donor.department}>{donor.department}</p>
                                                     <p className="text-gray-500">{donor.year} Year</p>
+                                                    <p className="text-gray-400 font-semibold">{donor.batch !== 'N/A' ? donor.batch : ''}</p>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3">

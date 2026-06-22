@@ -1,139 +1,120 @@
-import { supabase } from './supabase/client'
-
 export interface BloodDonationYearRecord {
     id: string
-    academicYear: string       // e.g. "2023-24"
-    eventName: string          // e.g. "Annual Blood Donation Camp"
-    donationDate: string       // ISO date string
+    academicYear: string
+    eventName: string
+    donationDate: string
     unitsDonated: number
     donorsCount: number
+    createdAt: Date
     createdBy: string
-    createdAt: string
 }
 
 export interface YearSummary {
     academicYear: string
+    totalEvents: number
     totalUnits: number
     totalDonors: number
-    totalEvents: number
     records: BloodDonationYearRecord[]
 }
 
-// Fetch all records
 export async function getBloodDonationYearRecords(): Promise<BloodDonationYearRecord[]> {
     try {
-        const { data, error } = await supabase
-            .from('blood_donation_years')
-            .select('*')
-            .order('donation_date', { ascending: false })
-
-        if (error) throw error
-
-        return (data || []).map(r => ({
-            id: r.id,
-            academicYear: r.academic_year,
-            eventName: r.event_name,
-            donationDate: r.donation_date,
-            unitsDonated: r.units_donated,
-            donorsCount: r.donors_count,
-            createdBy: r.created_by,
-            createdAt: r.created_at,
+        const response = await fetch('/api/blood-donation-years')
+        if (!response.ok) throw new Error('Failed to fetch records')
+        
+        const data = await response.json()
+        return data.map((record: any) => ({
+            ...record,
+            createdAt: new Date(record.createdAt)
         }))
     } catch (error) {
-        console.error('Error fetching blood donation year records:', error)
+        console.error('Error loading blood donation year records:', error)
         return []
     }
 }
 
-// Add a new record
-export async function addBloodDonationYearRecord(record: {
-    academicYear: string
-    eventName: string
-    donationDate: string
-    unitsDonated: number
-    donorsCount: number
+export async function addBloodDonationYearRecord(data: {
+    academicYear: string,
+    eventName: string,
+    donationDate: string,
+    unitsDonated: number,
+    donorsCount: number,
     createdBy: string
-}): Promise<boolean> {
+}): Promise<BloodDonationYearRecord | null> {
     try {
-        const { error } = await supabase
-            .from('blood_donation_years')
-            .insert({
-                academic_year: record.academicYear,
-                event_name: record.eventName,
-                donation_date: record.donationDate,
-                units_donated: record.unitsDonated,
-                donors_count: record.donorsCount,
-                created_by: record.createdBy,
-            })
-
-        if (error) throw error
-        return true
+        const response = await fetch('/api/blood-donation-years', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        
+        if (!response.ok) throw new Error('Failed to add record')
+        
+        const resData = await response.json()
+        return {
+            ...resData,
+            createdAt: new Date(resData.createdAt)
+        }
     } catch (error) {
         console.error('Error adding blood donation year record:', error)
-        return false
+        return null
     }
 }
 
-// Update an existing record
-export async function updateBloodDonationYearRecord(id: string, record: {
-    academicYear: string
-    eventName: string
-    donationDate: string
-    unitsDonated: number
-    donorsCount: number
-}): Promise<boolean> {
+export async function updateBloodDonationYearRecord(
+    id: string,
+    data: {
+        academicYear: string,
+        eventName: string,
+        donationDate: string,
+        unitsDonated: number,
+        donorsCount: number
+    }
+): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('blood_donation_years')
-            .update({
-                academic_year: record.academicYear,
-                event_name: record.eventName,
-                donation_date: record.donationDate,
-                units_donated: record.unitsDonated,
-                donors_count: record.donorsCount,
-            })
-            .eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/blood-donation-years/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        return response.ok
     } catch (error) {
         console.error('Error updating blood donation year record:', error)
         return false
     }
 }
 
-// Delete a record
 export async function deleteBloodDonationYearRecord(id: string): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('blood_donation_years')
-            .delete()
-            .eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/blood-donation-years/${id}`, {
+            method: 'DELETE'
+        })
+        return response.ok
     } catch (error) {
         console.error('Error deleting blood donation year record:', error)
         return false
     }
 }
 
-// Group records by academic year for summary view
 export function groupByYear(records: BloodDonationYearRecord[]): YearSummary[] {
-    const grouped: Record<string, BloodDonationYearRecord[]> = {}
-
-    records.forEach(r => {
-        if (!grouped[r.academicYear]) grouped[r.academicYear] = []
-        grouped[r.academicYear].push(r)
+    const grouped: Record<string, YearSummary> = {}
+    
+    records.forEach(record => {
+        if (!grouped[record.academicYear]) {
+            grouped[record.academicYear] = {
+                academicYear: record.academicYear,
+                totalEvents: 0,
+                totalUnits: 0,
+                totalDonors: 0,
+                records: []
+            }
+        }
+        grouped[record.academicYear].records.push(record)
+        grouped[record.academicYear].totalEvents++
+        grouped[record.academicYear].totalUnits += record.unitsDonated
+        grouped[record.academicYear].totalDonors += record.donorsCount
     })
-
-    return Object.entries(grouped)
-        .map(([year, recs]) => ({
-            academicYear: year,
-            totalUnits: recs.reduce((sum, r) => sum + r.unitsDonated, 0),
-            totalDonors: recs.reduce((sum, r) => sum + r.donorsCount, 0),
-            totalEvents: recs.length,
-            records: recs,
-        }))
-        .sort((a, b) => b.academicYear.localeCompare(a.academicYear))
+    
+    // Sort years descending
+    return Object.values(grouped).sort((a, b) => b.academicYear.localeCompare(a.academicYear))
 }

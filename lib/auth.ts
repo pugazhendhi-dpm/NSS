@@ -1,17 +1,18 @@
 import type { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { supabase } from '@/lib/supabase/client'
+import prisma from '@/lib/db'
 
 // Lookup user in authorized_users table
 async function getAuthorizedUser(email: string) {
-    const { data, error } = await supabase
-        .from('authorized_users')
-        .select('*')
-        .eq('email', email.toLowerCase())
-        .single()
-
-    if (error || !data) return null
-    return data
+    try {
+        const user = await prisma.authorizedUser.findUnique({
+            where: { email: email.toLowerCase() }
+        })
+        return user
+    } catch (error) {
+        console.error('Error fetching authorized user:', error)
+        return null
+    }
 }
 
 export const authOptions: NextAuthOptions = {
@@ -40,7 +41,7 @@ export const authOptions: NextAuthOptions = {
             if (!authorizedUser) {
                 return '/access-denied?error=not_authorized'
             }
-            if (!authorizedUser.is_active) {
+            if (!authorizedUser.isActive) {
                 return '/access-denied?error=inactive'
             }
 

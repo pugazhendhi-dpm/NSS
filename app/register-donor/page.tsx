@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CheckCircle, Droplet, AlertCircle, Phone } from 'lucide-react'
 import { DEPARTMENTS, YEARS, SECTIONS, EXTENDED_BLOOD_GROUPS, TN_DISTRICTS, TN_TOWNS_BY_DISTRICT, GENDERS, RESIDENTIAL_STATUS } from '@/lib/constants'
 import Autocomplete from '@/components/ui/Autocomplete'
@@ -31,10 +31,30 @@ export default function DonorRegistrationPage() {
         bloodDonationWillingness: '',
         residentialStatus: '',
         lastDonationDate: '',
+        batch: '',
     })
+    const [activeBatch, setActiveBatch] = useState<string | null>(null)
     const [submitted, setSubmitted] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await fetch('/api/settings')
+                if (res.ok) {
+                    const data = await res.json()
+                    if (data.activeDonorBatch) {
+                        setActiveBatch(data.activeDonorBatch)
+                        setFormData(prev => ({ ...prev, batch: data.activeDonorBatch }))
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching settings:', err)
+            }
+        }
+        fetchSettings()
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -60,6 +80,7 @@ export default function DonorRegistrationPage() {
                 alternatePhone: formData.alternatePhone || undefined,
                 bloodDonationWillingness: formData.bloodDonationWillingness || undefined,
                 residentialStatus: formData.residentialStatus || undefined,
+                batch: formData.batch || undefined,
                 lastDonationDate: formData.lastDonationDate || undefined,
             })
 
@@ -183,6 +204,21 @@ export default function DonorRegistrationPage() {
                             <div className="border-b border-gray-200 pb-6">
                                 <h3 className="text-lg font-semibold text-nss-blue mb-4">Personal Information</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {activeBatch && (
+                                        <div className="md:col-span-2">
+                                            <label htmlFor="batch" className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Registration Batch
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="batch"
+                                                name="batch"
+                                                value={formData.batch}
+                                                readOnly
+                                                className="input-field bg-gray-100 cursor-not-allowed font-medium text-gray-700"
+                                            />
+                                        </div>
+                                    )}
                                     <div className="md:col-span-2">
                                         <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
                                             Full Name *

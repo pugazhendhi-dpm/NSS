@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Calendar, Users, MapPin, ChevronDown } from 'lucide-react'
 import { getActivities, subscribeToActivities, Activity } from '@/lib/activitiesService'
 
-type ActivityType = 'all' | 'Regular Activities' | 'Special Camps'
+type ActivityType = 'all' | 'Sustainable Initiatives' | 'Special Camps'
 
 // Helper function to get academic year from date
 function getAcademicYear(date: Date): string {
@@ -110,8 +110,8 @@ export default function ActivitiesPage() {
                             All Activities
                         </button>
                         <button
-                            onClick={() => setFilter('Regular Activities')}
-                            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${filter === 'Regular Activities'
+                            onClick={() => setFilter('Sustainable Initiatives')}
+                            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${filter === 'Sustainable Initiatives'
                                 ? 'bg-nss-blue text-white shadow-lg'
                                 : 'bg-white text-gray-700 hover:bg-gray-100'
                                 }`}
@@ -275,7 +275,7 @@ export default function ActivitiesPage() {
                         <h2 className="text-2xl font-bold text-nss-blue mb-6">Activity Requirements</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="border-l-4 border-nss-blue pl-4">
-                                <h3 className="text-lg font-semibold text-nss-blue mb-2">Regular Activities</h3>
+                                <h3 className="text-lg font-semibold text-nss-blue mb-2">Sustainable Initiatives</h3>
                                 <p className="text-gray-700">
                                     Each NSS volunteer must complete <strong>120 hours</strong> of regular community
                                     service activities throughout the academic year. These include blood donation drives,
@@ -285,7 +285,7 @@ export default function ActivitiesPage() {
                             <div className="border-l-4 border-nss-red pl-4">
                                 <h3 className="text-lg font-semibold text-nss-red mb-2">Special Camping</h3>
                                 <p className="text-gray-700">
-                                    In addition to regular activities, volunteers participate in one <strong>7-day
+                                    In addition to sustainable initiatives, volunteers participate in one <strong>7-day
                                         residential special camp</strong> annually. These intensive camps focus on rural
                                     development and community immersion.
                                 </p>

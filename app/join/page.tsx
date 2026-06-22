@@ -41,13 +41,12 @@ export default function JoinPage() {
                 year: formData.year,
                 bloodGroup: formData.bloodGroup,
                 phone: formData.phone,
-                skills: formData.skills,
             })
 
-            if (result) {
+            if (result.success) {
                 setSubmitted(true)
             } else {
-                setError('Failed to submit enrollment. Please try again or contact NSS volunteers.')
+                setError(result.error || 'Failed to submit enrollment. Please try again or contact NSS volunteers.')
             }
         } catch (err) {
             console.error('Enrollment error:', err)
@@ -326,7 +325,7 @@ export default function JoinPage() {
                         <div className="bg-nss-red/10 border-l-4 border-nss-red p-6 rounded">
                             <h3 className="font-semibold text-nss-red mb-2">Commitment Required</h3>
                             <ul className="text-gray-700 space-y-2 text-sm">
-                                <li>• 120 hours of regular activities</li>
+                                <li>• 120 hours of sustainable initiatives</li>
                                 <li>• One 7-day special camp annually</li>
                                 <li>• Active participation in events</li>
                             </ul>

@@ -1,5 +1,3 @@
-import { supabase } from '@/lib/supabase/client'
-
 export interface AuthorizedUser {
     id: string
     email: string
@@ -7,79 +5,69 @@ export interface AuthorizedUser {
     role: 'admin' | 'supersenior'
     is_active: boolean
     created_at: string
-    updated_at: string
 }
 
-// Get all authorized users
 export async function getAuthorizedUsers(): Promise<AuthorizedUser[]> {
     try {
-        const { data, error } = await supabase
-            .from('authorized_users')
-            .select('*')
-            .order('created_at', { ascending: false })
-
-        if (error) throw error
-        return data || []
+        const response = await fetch('/api/authorized-users')
+        if (!response.ok) throw new Error('Failed to fetch authorized users')
+        
+        const data = await response.json()
+        // Map from Prisma camelCase to expected snake_case for UI components
+        return data.map((user: any) => ({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            is_active: user.isActive,
+            created_at: user.createdAt
+        }))
     } catch (error) {
         console.error('Error fetching authorized users:', error)
         return []
     }
 }
 
-// Add a new authorized user
-export async function addAuthorizedUser(
-    email: string,
-    name: string,
-    role: 'admin' | 'supersenior'
-): Promise<AuthorizedUser | null> {
+export async function addAuthorizedUser(email: string, name: string, role: 'admin' | 'supersenior'): Promise<{ success: boolean; error?: string }> {
     try {
-        const { data, error } = await supabase
-            .from('authorized_users')
-            .insert({
-                email: email.toLowerCase().trim(),
-                name: name.trim(),
-                role,
-            })
-            .select()
-            .single()
-
-        if (error) throw error
-        return data
+        const response = await fetch('/api/authorized-users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, name, role })
+        })
+        
+        if (!response.ok) {
+            const data = await response.json()
+            return { success: false, error: data.error || 'Failed to add user' }
+        }
+        
+        return { success: true }
     } catch (error) {
         console.error('Error adding authorized user:', error)
-        return null
+        return { success: false, error: 'An unexpected error occurred' }
     }
 }
 
-// Update an authorized user
-export async function updateAuthorizedUser(
-    id: string,
-    updates: Partial<Pick<AuthorizedUser, 'name' | 'role' | 'is_active'>>
-): Promise<boolean> {
+export async function updateAuthorizedUser(id: string, updates: Partial<AuthorizedUser>): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('authorized_users')
-            .update({ ...updates, updated_at: new Date().toISOString() })
-            .eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/authorized-users/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates)
+        })
+        return response.ok
     } catch (error) {
         console.error('Error updating authorized user:', error)
         return false
     }
 }
 
-// Delete an authorized user
 export async function deleteAuthorizedUser(id: string): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('authorized_users')
-            .delete()
-            .eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/authorized-users/${id}`, {
+            method: 'DELETE'
+        })
+        return response.ok
     } catch (error) {
         console.error('Error deleting authorized user:', error)
         return false

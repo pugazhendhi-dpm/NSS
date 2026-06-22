@@ -20,7 +20,19 @@ export default function ImpactCounter() {
             const initialStats = await getStats()
             const records = await getBloodDonationYearRecords()
             const totalBloodUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
-            setStats({ ...initialStats, bloodUnitsDonated: totalBloodUnits })
+            if (initialStats) {
+                setStats({ ...initialStats, bloodUnitsDonated: totalBloodUnits })
+            } else {
+                setStats({
+                    id: 'new',
+                    volunteersEnrolled: 0,
+                    hoursOfService: 0,
+                    bloodUnitsDonated: totalBloodUnits,
+                    villagesAdopted: 0,
+                    lastUpdated: new Date(),
+                    lastUpdatedBy: 'System'
+                })
+            }
         }
         loadStats()
 
@@ -29,7 +41,19 @@ export default function ImpactCounter() {
             const newStats = await getStats()
             const records = await getBloodDonationYearRecords()
             const totalBloodUnits = records.reduce((sum, r) => sum + r.unitsDonated, 0)
-            setStats({ ...newStats, bloodUnitsDonated: totalBloodUnits })
+            if (newStats) {
+                setStats({ ...newStats, bloodUnitsDonated: totalBloodUnits })
+            } else {
+                setStats({
+                    id: 'new',
+                    volunteersEnrolled: 0,
+                    hoursOfService: 0,
+                    bloodUnitsDonated: totalBloodUnits,
+                    villagesAdopted: 0,
+                    lastUpdated: new Date(),
+                    lastUpdatedBy: 'System'
+                })
+            }
         })
 
         return unsubscribe

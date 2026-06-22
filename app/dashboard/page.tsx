@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Users, Droplet, Phone, LogOut, UserCheck, Shield, Calendar, BarChart, Megaphone, Activity, Image, ClipboardCheck, BookOpen } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
 import FeedbackSection from '@/components/FeedbackSection'
 import { hasPermission, getRoleName, getRoleBadgeColor, PERMISSIONS } from '@/lib/permissions'
 import { useAuth } from '@/lib/useAuth'
@@ -14,11 +13,14 @@ function PendingBadge() {
     const [count, setCount] = useState<number>(0)
 
     useEffect(() => {
-        supabase
-            .from('volunteers')
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'pending')
-            .then(({ count }) => setCount(count || 0))
+        fetch('/api/volunteers?status=pending')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setCount(data.length)
+                }
+            })
+            .catch(err => console.error('Error fetching pending volunteers:', err))
     }, [])
 
     if (count === 0) return null
@@ -45,26 +47,28 @@ export default function DashboardPage() {
     const loadStats = async () => {
         try {
             // Total donors
-            const { count: totalCount } = await supabase
-                .from('blood_donors')
-                .select('*', { count: 'exact', head: true })
+            const donorsRes = await fetch('/api/blood-donors')
+            const allDonors = await donorsRes.json()
 
             // Available now (eligible donors - no donation in last 90 days)
             const ninetyDaysAgo = new Date()
             ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
 
-            const { data: eligibleDonors } = await supabase
-                .from('blood_donors')
-                .select('id, last_donation_date')
-                .or(`last_donation_date.is.null,last_donation_date.lt.${ninetyDaysAgo.toISOString()}`)
+            let eligibleCount = 0
+            if (Array.isArray(allDonors)) {
+                eligibleCount = allDonors.filter((donor: any) => {
+                    if (!donor.lastDonationDate) return true
+                    return new Date(donor.lastDonationDate) < ninetyDaysAgo
+                }).length
+            }
 
             // Called today - you can track this in a separate table later
             // For now, using 0 as placeholder
             const calledToday = 0
 
             setStats({
-                totalDonors: totalCount || 0,
-                availableNow: eligibleDonors?.length || 0,
+                totalDonors: Array.isArray(allDonors) ? allDonors.length : 0,
+                availableNow: eligibleCount,
                 calledToday,
             })
         } catch (error) {

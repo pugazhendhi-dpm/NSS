@@ -25,7 +25,7 @@ export default function ActivitiesManagementPage() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        category: 'Regular Activities' as 'Regular Activities' | 'Special Camps',
+        category: 'Sustainable Initiatives' as 'Sustainable Initiatives' | 'Special Camps',
         date: '',
         location: '',
         participants: 0,
@@ -53,7 +53,7 @@ export default function ActivitiesManagementPage() {
         setFormData({
             title: '',
             description: '',
-            category: 'Regular Activities',
+            category: 'Sustainable Initiatives',
             date: '',
             location: '',
             participants: 0,
@@ -198,12 +198,12 @@ export default function ActivitiesManagementPage() {
                                     onChange={(e) =>
                                         setFormData({
                                             ...formData,
-                                            category: e.target.value as 'Regular Activities' | 'Special Camps',
+                                            category: e.target.value as 'Sustainable Initiatives' | 'Special Camps',
                                         })
                                     }
                                     className="input-field"
                                 >
-                                    <option value="Regular Activities">Regular Activities</option>
+                                    <option value="Sustainable Initiatives">Sustainable Initiatives</option>
                                     <option value="Special Camps">Special Camps</option>
                                 </select>
                             </div>

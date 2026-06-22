@@ -5,7 +5,6 @@ import ImpactCounter from '@/components/home/ImpactCounter'
 import UpdatesMarquee from '@/components/home/UpdatesMarquee'
 import BloodDonationImpact from '@/components/home/BloodDonationImpact'
 import TodaySpecialDay from '@/components/home/TodaySpecialDay'
-import RecentDonorsTicker from '@/components/home/RecentDonorsTicker'
 import EventSlider from '@/components/home/EventSlider'
 
 export default function HomePage() {
@@ -13,9 +12,6 @@ export default function HomePage() {
         <div className="min-h-screen">
             {/* Today's Special Day Banner */}
             <TodaySpecialDay />
-
-            {/* Recent Donors Recognition Ticker */}
-            <RecentDonorsTicker />
 
             {/* Hero Section */}
             <section className="relative h-[600px] flex items-center justify-center overflow-hidden">

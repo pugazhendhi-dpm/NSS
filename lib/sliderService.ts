@@ -1,10 +1,8 @@
-import { supabase } from './supabase/client'
-
 export interface SliderEvent {
     id: string
     title: string
-    subtitle: string
-    imageUrl: string
+    subtitle?: string
+    imagePath: string
     orderIndex: number
     createdAt: Date
     createdBy: string
@@ -12,21 +10,13 @@ export interface SliderEvent {
 
 export async function getSliderEvents(): Promise<SliderEvent[]> {
     try {
-        const { data, error } = await supabase
-            .from('slider_events')
-            .select('*')
-            .order('order_index', { ascending: true })
-
-        if (error) throw error
-
-        return (data || []).map((event) => ({
-            id: event.id,
-            title: event.title,
-            subtitle: event.subtitle || '',
-            imageUrl: event.image_url,
-            orderIndex: event.order_index || 0,
-            createdAt: new Date(event.created_at),
-            createdBy: event.created_by || 'Unknown',
+        const response = await fetch('/api/slider')
+        if (!response.ok) throw new Error('Failed to fetch slider events')
+        
+        const data = await response.json()
+        return data.map((event: any) => ({
+            ...event,
+            createdAt: new Date(event.createdAt)
         }))
     } catch (error) {
         console.error('Error loading slider events:', error)
@@ -36,62 +26,43 @@ export async function getSliderEvents(): Promise<SliderEvent[]> {
 
 export async function addSliderEvent(
     title: string,
-    subtitle: string,
+    subtitle: string | undefined,
     imageFile: File,
     createdBy: string
 ): Promise<SliderEvent | null> {
     try {
-        // 0. Calculate new order index
-        const { data: maxOrderData } = await supabase
-            .from('slider_events')
-            .select('order_index')
-            .order('order_index', { ascending: false })
-            .limit(1)
+        // 1. Upload image to local server
+        const formData = new FormData()
+        formData.append('file', imageFile)
+        formData.append('folder', 'slider')
+
+        const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        })
+
+        if (!uploadResponse.ok) throw new Error('Failed to upload image file')
         
-        const newOrderIndex = maxOrderData && maxOrderData.length > 0 ? maxOrderData[0].order_index + 1 : 0;
+        const { imagePath } = await uploadResponse.json()
 
-        // 1. Upload image to gallery-images bucket
-        const fileExt = imageFile.name.split('.').pop()
-        const fileName = `slider-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-        const filePath = `${fileName}`
-
-        const { error: uploadError } = await supabase.storage
-            .from('gallery-images')
-            .upload(filePath, imageFile, {
-                cacheControl: '3600',
-                upsert: false,
-            })
-
-        if (uploadError) throw uploadError
-
-        // 2. Get public URL
-        const {
-            data: { publicUrl },
-        } = supabase.storage.from('gallery-images').getPublicUrl(filePath)
-
-        // 3. Add database entry
-        const { data, error } = await supabase
-            .from('slider_events')
-            .insert({
+        // 2. Add event entry to database
+        const response = await fetch('/api/slider', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 title,
                 subtitle,
-                image_url: publicUrl,
-                order_index: newOrderIndex,
-                created_by: createdBy,
+                imagePath,
+                createdBy
             })
-            .select()
-            .single()
+        })
 
-        if (error) throw error
-
+        if (!response.ok) throw new Error('Failed to add slider event')
+        
+        const data = await response.json()
         return {
-            id: data.id,
-            title: data.title,
-            subtitle: data.subtitle || '',
-            imageUrl: data.image_url,
-            orderIndex: data.order_index || 0,
-            createdAt: new Date(data.created_at),
-            createdBy: data.created_by || 'Unknown',
+            ...data,
+            createdAt: new Date(data.createdAt)
         }
     } catch (error) {
         console.error('Error adding slider event:', error)
@@ -99,79 +70,53 @@ export async function addSliderEvent(
     }
 }
 
-export async function updateSliderEvent(
-    id: string,
-    title: string,
-    subtitle: string
-): Promise<boolean> {
+export async function updateSliderOrder(orderedIds: string[]): Promise<boolean> {
     try {
-        const { error } = await supabase
-            .from('slider_events')
-            .update({ title, subtitle })
-            .eq('id', id)
-
-        if (error) throw error
-        return true
-    } catch (error) {
-        console.error('Error updating slider event:', error)
-        return false
-    }
-}
-
-export async function updateSliderOrder(
-    orderedIds: string[]
-): Promise<boolean> {
-    try {
-        // Prepare the upsert payload (we only update order_index for existing records)
-        // Note: Supabase JS doesn't have a bulk update, so we can do it via a loop or by fetching and updating individually. 
-        // Since the list of slides is usually small (e.g. 5-10), a Promise.all with updates is fine.
-        const promises = orderedIds.map((id, index) => 
-            supabase
-                .from('slider_events')
-                .update({ order_index: index })
-                .eq('id', id)
-        )
-
-        await Promise.all(promises)
-        
-        return true
+        const response = await fetch('/api/slider/reorder', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderedIds })
+        })
+        return response.ok
     } catch (error) {
         console.error('Error updating slider order:', error)
         return false
     }
 }
 
+export async function updateSliderEvent(
+    id: string,
+    title: string,
+    subtitle?: string
+): Promise<boolean> {
+    try {
+        const response = await fetch(`/api/slider/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, subtitle })
+        })
+        return response.ok
+    } catch (error) {
+        console.error('Error updating slider event:', error)
+        return false
+    }
+}
+
 export async function deleteSliderEvent(id: string): Promise<boolean> {
     try {
-        // 1. Get the image URL to delete from storage
-        const { data: eventData } = await supabase.from('slider_events').select('image_url').eq('id', id).single()
-
-        if (eventData?.image_url) {
-            const urlParts = eventData.image_url.split('/')
-            const fileName = urlParts[urlParts.length - 1]
-            await supabase.storage.from('gallery-images').remove([fileName])
-        }
-
-        // 2. Delete database entry
-        const { error } = await supabase.from('slider_events').delete().eq('id', id)
-
-        if (error) throw error
-        return true
+        const response = await fetch(`/api/slider/${id}`, {
+            method: 'DELETE'
+        })
+        return response.ok
     } catch (error) {
         console.error('Error deleting slider event:', error)
         return false
     }
 }
 
-export function subscribeToSliderEvents(callback: () => void): () => void {
-    const channel = supabase
-        .channel('slider-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'slider_events' }, () => {
-            callback()
-        })
-        .subscribe()
-
-    return () => {
-        supabase.removeChannel(channel)
-    }
+export function subscribeToSlider(callback: () => void): () => void {
+    console.warn('Real-time subscriptions are not supported with MySQL backend.')
+    return () => {}
 }
+
+export const subscribeToSliderEvents = subscribeToSlider
